@@ -1,40 +1,39 @@
 import PropTypes from 'prop-types';
 import SimpleBar from 'simplebar-react';
-import 'simplebar-react/dist/simplebar.min.css';
 import { alpha, styled } from '@mui/material/styles';
 import { Box } from '@mui/material';
-
-// ----------------------------------------------------------------------
-
 const RootStyle = styled('div')(() => ({
   flexGrow: 1,
   height: '100%',
   overflow: 'scroll',
-}));
-
-const SimpleBarStyle = styled(SimpleBar)(({ theme }) => ({
-  // maxHeight: '100%',
-  '& .simplebar-scrollbar': {
-    '&:before': {
-      backgroundColor: alpha(theme.palette.grey[600], 0.48),
-    },
-    '&.simplebar-visible:before': {
-      opacity: 1,
-    },
-  },
-  '& .simplebar-track.simplebar-vertical': {
-    width: 10,
-  },
-  '& .simplebar-track.simplebar-horizontal .simplebar-scrollbar': {
-    height: 6,
-  },
-  '& .simplebar-mask': {
-    zIndex: 'inherit',
-  },
-  "& .simplebar-placeholder": {
-    height: '0 !important',
+  "&::-webkit-scrollbar": {
+    display: "none"
   }
 }));
+
+// const SimpleBarStyle = styled(SimpleBar)(({ theme }) => ({
+//   // maxHeight: '100%',
+//   '& .simplebar-scrollbar': {
+//     '&:before': {
+//       backgroundColor: alpha(theme.palette.grey[600], 0.48),
+//     },
+//     '&.simplebar-visible:before': {
+//       opacity: 1,
+//     },
+//   },
+//   '& .simplebar-track.simplebar-vertical': {
+//     width: 10,
+//   },
+//   '& .simplebar-track.simplebar-horizontal .simplebar-scrollbar': {
+//     height: 6,
+//   },
+//   '& .simplebar-mask': {
+//     zIndex: 'inherit',
+//   },
+//   "& .simplebar-placeholder": {
+//     height: '0 !important',
+//   }
+// }));
 
 // ----------------------------------------------------------------------
 
@@ -58,11 +57,11 @@ export default function Scrollbar({ children, sx, ...other }) {
 
   return (
     <RootStyle>
-      <SimpleBarStyle timeout={500} clickOnTrack={false} sx={sx} {...other}>
+      <SimpleBar timeout={500} clickOnTrack={false} >
         {children}
-      </SimpleBarStyle>
+      </SimpleBar>
     </RootStyle>
   );
 }
 
-export {SimpleBarStyle};
+export {SimpleBar};

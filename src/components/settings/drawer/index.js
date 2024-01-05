@@ -9,23 +9,15 @@ import {
   Typography,
   IconButton,
 } from "@mui/material";
-// hooks
 import useSettings from "../../../hooks/useSettings";
-// utils
 import cssStyles from "../../../utils/cssStyles";
-// config
 import { NAVBAR, defaultSettings } from "../../../config";
-//
 import Iconify from "../../Iconify";
 import Scrollbar from "../../Scrollbar";
-//
 import ToggleButton from "./ToggleButton";
 import SettingDirection from "./SettingDirection";
 import SettingFullscreen from "./SettingFullscreen";
 import SettingColorPresets from "./SettingColorPresets";
-
-// ----------------------------------------------------------------------
-
 const RootStyle = styled(m.div)(({ theme }) => ({
   ...cssStyles(theme).bgBlur({
     color: theme.palette.background.paper,
