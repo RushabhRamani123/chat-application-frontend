@@ -24,8 +24,8 @@ import { useTheme } from "@mui/material/styles";
 import { faker } from "@faker-js/faker";
 import SimpleBar from 'simplebar-react';
 import 'simplebar-react/dist/simplebar.min.css';
-// import ThemeDialog from "../../sections/dashboard/Settings/ThemeDialog";
-// import ShortcutDialog from "../../sections/dashboard/Settings/ShortcutDialog";
+import ThemeDialog from "../../sections/Dashboard/Settings/ThemeDialog";
+import ShortcutDialog from "../../sections/Dashboard/Settings/ShortcutDialog";
 
 const Settings = () => {
   const theme = useTheme();
@@ -143,7 +143,7 @@ const Settings = () => {
               </Stack>
             </Stack>
             {/* List */}
-            <Stack spacing={4} sx={{ }}>
+            <Stack spacing={4}>
               {list.map(({ key, icon, title, onclick }) => {
                 return (
                   <>
@@ -166,7 +166,7 @@ const Settings = () => {
         </SimpleBar>
           </Box>
         {/* Right Pane */}
-        {/* <Box
+        <Box
           sx={{
             height: "100%",
             width: "calc(100vw - 420px )",
@@ -174,14 +174,14 @@ const Settings = () => {
               theme.palette.mode === "light"
                 ? "#FFF"
                 : theme.palette.background.paper,
-            borderBottom: "6px solid #0162C4",
+            // borderBottom: "6px solid #0162C4",
           }}
-        ></Box> */}
+        ></Box>
       </Stack>
-      {/* {openTheme && (
+      {openTheme && (
         <ThemeDialog open={openTheme} handleClose={handleCloseTheme} />
       )}
-      {openShortcuts && <ShortcutDialog open={openShortcuts} handleClose={handleCloseShortcuts} /> } */}
+      {openShortcuts && <ShortcutDialog open={openShortcuts} handleClose={handleCloseShortcuts} /> }
       
     </>
   );
