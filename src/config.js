@@ -54,6 +54,12 @@ export const allLangs = [
     systemValue: arSD,
     icon: '/assets/icons/flags/ic_flag_sa.svg',
   },
+  {
+    label: 'Hindi',
+    value: 'hi',
+    systemValue: 'hi',
+    icon: '/assets/icons/flags/ic_flag_in.svg',
+  }
 ];
 
 export const defaultLang = allLangs[0]; // English

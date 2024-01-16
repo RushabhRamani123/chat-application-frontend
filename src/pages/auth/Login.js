@@ -3,7 +3,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { Stack, Typography, Link } from "@mui/material";
 import AuthSocial from "../../sections/auth/AuthSocial";
 import Login from "../../sections/auth/LoginForm";
-
+// import NewPassword from "../../sections/auth/NewPasswordForm";
 // ----------------------------------------------------------------------
 
 export default function LoginPage() {

@@ -22,7 +22,6 @@ export default function useResponsive(query, key, start, end) {
   if (query === 'down') {
     return mediaDown;
   }
-
   if (query === 'between') {
     return mediaBetween;
   }
