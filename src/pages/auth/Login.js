@@ -17,7 +17,11 @@ export default function LoginPage() {
         <Stack direction="row" spacing={0.5}>
           <Typography variant="body2">New user?</Typography>
 
-          <Link to={"/auth/register"} component={RouterLink} variant="subtitle2">
+          <Link
+            to={"/auth/register"}
+            component={RouterLink}
+            variant="subtitle2"
+          >yyy
             Create an account
           </Link>
         </Stack>

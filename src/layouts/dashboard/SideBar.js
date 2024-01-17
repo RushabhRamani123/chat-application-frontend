@@ -1,3 +1,5 @@
+// import { Box, Divider, IconButton, Stack } from "@mui/material";
+import { useDispatch } from "react-redux";
 import { Box, Divider, IconButton, Stack } from "@mui/material";
 import React from "react";
 import { useTheme } from "@mui/material/styles";
@@ -9,8 +11,9 @@ import useSettings from "../../hooks/useSettings";
 import { Nav_Buttons } from "../../data";
 import { faker } from "@faker-js/faker";
 import { Avatar } from '@mui/material';
-import ProfileMenu from "./ProfileMenu";
+// import ProfileMenu from "./ProfileMenu";
 const SideBar = () => {
+  const dispatch = useDispatch();
     const theme = useTheme();
     const [selected, setSelected] = useState(0);
     const { onToggleMode } = useSettings();
@@ -80,6 +83,7 @@ const SideBar = () => {
               <Divider sx={{ width: "48px" }} />
               {selected === 3 ? (
                 <Box
+                  key={3}y
                   p={1}
                   sx={{
                     backgroundColor: theme.palette.primary.main,
