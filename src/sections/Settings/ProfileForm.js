@@ -3,8 +3,8 @@ import * as Yup from "yup";
 // form
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import FormProvider from "../../../components/hook-form/FormProvider";
-import { RHFTextField, RHFUploadAvatar } from "../../../components/hook-form";
+import FormProvider from "../../components/hook-form/FormProvider";
+import { RHFTextField, RHFUploadAvatar } from "../../components/hook-form";
 import { Stack } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 

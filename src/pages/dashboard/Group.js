@@ -52,8 +52,7 @@ const Group = () => {
             <Stack
               alignItems={"center"}
               justifyContent="space-between"
-              direction="row"
-            >
+              direction="row">
               <Typography variant="h5">Groups</Typography>
             </Stack>
             <Stack sx={{ width: "100%" }}>
@@ -80,23 +79,31 @@ const Group = () => {
               </IconButton>
             </Stack>
             <Divider />
-            <Stack sx={{ flexGrow: 1, overflow: "scroll", height: "100%" }}>
+            <Stack sx={{ flexGrow: 1, overflow: "scroll", height: "100%" , "&::-webkit-scrollbar": { display: "none" }, widht: "100%" }}>
               {/* <SimpleBarStyle timeout={500} clickOnTrack={false}> */}
                 <Stack spacing={2.4}>
-                  <Typography variant="subtitle2" sx={{ color: "#676667" }}>
+                <Stack>
+                <Typography variant="subtitle2" sx={{ color: "#676667" }}>
                     Pinned
                   </Typography>
+                  </Stack>
                   {/* Chat List */}
-                  {ChatList.filter((el) => el.pinned).map((el, idx) => {
+                <Stack>
+                {ChatList.filter((el) => el.pinned).map((el, idx) => {
                     return <ChatElement {...el} />;
                   })}
-                  <Typography variant="subtitle2" sx={{ color: "#676667" }}>
+                  </Stack>
+                <Stack>
+                <Typography variant="subtitle2" sx={{ color: "#676667" }}>
                     All Chats
                   </Typography>
+                 </Stack>
                   {/* Chat List */}
-                  {ChatList.filter((el) => !el.pinned).map((el, idx) => {
+                <Stack>
+                {ChatList.filter((el) => !el.pinned).map((el, idx) => {
                     return <ChatElement {...el} />;
                   })}
+                 </Stack>
                 </Stack>
               {/* </SimpleBarStyle> */}
             </Stack>
