@@ -3,14 +3,12 @@ import { Navigate, useRoutes } from "react-router-dom";
 
 // layouts
 import DashboardLayout from "../layouts/dashboard";
+import AuthLayout from "../layouts/auth";
 
 // config
 import { DEFAULT_PATH } from "../config";
 import LoadingScreen from "../components/LoadingScreen";
-import AuthLayout from "../layouts/auth";
-// import MainLayout from "../layouts/main";
-// import Setting from "../pages/dashboard/Settings";
-// This is the higher order component that will wrap it into 
+
 const Loadable = (Component) => (props) => {
   return (
     <Suspense fallback={<LoadingScreen />}>
@@ -29,6 +27,7 @@ export default function Router() {
         { path: "register", element: <RegisterPage /> },
         { path: "reset-password", element: <ResetPasswordPage /> },
         { path: "new-password", element: <NewPasswordPage /> },
+        {path: "verify", element: <VerifyPage /> },
       ],
     },
     {
@@ -43,11 +42,14 @@ export default function Router() {
         { path: "chats", element: <Chats /> },
         { path: "contact", element: <Contact /> },
         { path: "profile", element: <Profile /> },
-        { path: "call", element: <CallPage />},
+
+        {path: "call", element: <CallPage />},
+        
         { path: "404", element: <Page404 /> },
         { path: "*", element: <Navigate to="/404" replace /> },
       ],
     },
+
     { path: "*", element: <Navigate to="/404" replace /> },
   ]);
 }
@@ -65,6 +67,7 @@ const Contact = Loadable(lazy(() => import("../sections/Dashboard/Contact")));
 const Page404 = Loadable(lazy(() => import("../pages/Page404")));
 
 const LoginPage = Loadable(lazy(() => import("../pages/auth/Login")));
+const VerifyPage = Loadable(lazy(() => import("../pages/auth/Verify")));
 const RegisterPage = Loadable(lazy(() => import("../pages/auth/Register")));
 const ResetPasswordPage = Loadable(
   lazy(() => import("../pages/auth/ResetPassword"))
@@ -72,6 +75,8 @@ const ResetPasswordPage = Loadable(
 const NewPasswordPage = Loadable(
   lazy(() => import("../pages/auth/NewPassword"))
 );
+
+// Settings
 const Settings = Loadable(lazy(() => import("../pages/dashboard/Settings")));
 const Profile = Loadable(
   lazy(() => import("../pages/dashboard/Settings/Profile"))
