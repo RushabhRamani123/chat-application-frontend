@@ -24,10 +24,10 @@ const Group = () => {
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
-  }
+  };
   const handleOpenDialog = () => {
     setOpenDialog(true);
-  }
+  };
   const theme = useTheme();
   return (
     <>
@@ -52,7 +52,8 @@ const Group = () => {
             <Stack
               alignItems={"center"}
               justifyContent="space-between"
-              direction="row">
+              direction="row"
+            >
               <Typography variant="h5">Groups</Typography>
             </Stack>
             <Stack sx={{ width: "100%" }}>
@@ -79,32 +80,40 @@ const Group = () => {
               </IconButton>
             </Stack>
             <Divider />
-            <Stack sx={{ flexGrow: 1, overflow: "scroll", height: "100%" , "&::-webkit-scrollbar": { display: "none" }, widht: "100%" }}>
+            <Stack
+              sx={{
+                flexGrow: 1,
+                overflow: "scroll",
+                height: "100%",
+                "&::-webkit-scrollbar": { display: "none" },
+                widht: "100%",
+              }}
+            >
               {/* <SimpleBarStyle timeout={500} clickOnTrack={false}> */}
-                <Stack spacing={2.4}>
+              <Stack spacing={2.4}>
                 <Stack>
-                <Typography variant="subtitle2" sx={{ color: "#676667" }}>
+                  <Typography variant="subtitle2" sx={{ color: "#676667" }}>
                     Pinned
                   </Typography>
-                  </Stack>
-                  {/* Chat List */}
+                </Stack>
+                {/* Chat List */}
                 <Stack>
-                {ChatList.filter((el) => el.pinned).map((el, idx) => {
+                  {ChatList.filter((el) => el.pinned).map((el, idx) => {
                     return <ChatElement {...el} />;
                   })}
-                  </Stack>
+                </Stack>
                 <Stack>
-                <Typography variant="subtitle2" sx={{ color: "#676667" }}>
+                  <Typography variant="subtitle2" sx={{ color: "#676667" }}>
                     All Chats
                   </Typography>
-                 </Stack>
-                  {/* Chat List */}
+                </Stack>
+                {/* Chat List */}
                 <Stack>
-                {ChatList.filter((el) => !el.pinned).map((el, idx) => {
+                  {ChatList.filter((el) => !el.pinned).map((el, idx) => {
                     return <ChatElement {...el} />;
                   })}
-                 </Stack>
                 </Stack>
+              </Stack>
               {/* </SimpleBarStyle> */}
             </Stack>
           </Stack>
@@ -112,7 +121,9 @@ const Group = () => {
 
         {/* Right */}
       </Stack>
-      {openDialog && <CreateGroup open={openDialog} handleClose={handleCloseDialog} />}
+      {openDialog && (
+        <CreateGroup open={openDialog} handleClose={handleCloseDialog} />
+      )}
     </>
   );
 };

@@ -22,8 +22,8 @@ import {
 
 import { useTheme } from "@mui/material/styles";
 import { faker } from "@faker-js/faker";
-import SimpleBar from 'simplebar-react';
-import 'simplebar-react/dist/simplebar.min.css';
+import SimpleBar from "simplebar-react";
+import "simplebar-react/dist/simplebar.min.css";
 import ThemeDialog from "../../sections/Dashboard/Settings/ThemeDialog";
 import ShortcutDialog from "../../sections/Dashboard/Settings/ShortcutDialog";
 
@@ -107,7 +107,7 @@ const Settings = () => {
         <Box
           sx={{
             overflowY: "scroll",
-            
+
             height: "100vh",
             width: 320,
             backgroundColor:
@@ -115,56 +115,65 @@ const Settings = () => {
                 ? "#F8FAFF"
                 : theme.palette.background,
 
-                      boxShadow: "0px 0px 2px rgba(0, 0, 0, 0.25)",
-                      "&::-webkit-scrollbar": { display: "none" },
-                    }}
+            boxShadow: "0px 0px 2px rgba(0, 0, 0, 0.25)",
+            "&::-webkit-scrollbar": { display: "none" },
+          }}
         >
-                    <SimpleBar style={{ height: "100vh" }} timeout={500} clickOnTrack={false}>
-          
-          <Stack p={4} spacing={5}>
-            {/* Header */}
-            <Stack direction="row" alignItems={"center"} spacing={3}>
-              <IconButton>
-                <CaretLeft size={24} color={"#4B4B4B"} />
-              </IconButton>
+          <SimpleBar
+            style={{ height: "100vh" }}
+            timeout={500}
+            clickOnTrack={false}
+          >
+            <Stack p={4} spacing={5}>
+              {/* Header */}
+              <Stack direction="row" alignItems={"center"} spacing={3}>
+                <IconButton>
+                  <CaretLeft size={24} color={"#4B4B4B"} />
+                </IconButton>
 
-              <Typography variant="h6">Settings</Typography>
-            </Stack>
+                <Typography variant="h6">Settings</Typography>
+              </Stack>
 
-            {/* Profile */}
-            <Stack direction="row" spacing={3}>
-              <Avatar
-                src={faker.image.avatar()}
-                sx={{ height: 56, width: 56 }}
-              />
-              <Stack spacing={0.5}>
-                <Typography variant="article">{`${faker.name.firstName()} ${faker.name.lastName()}`}</Typography>
-                <Typography variant="body2">{faker.random.words()}</Typography>
+              {/* Profile */}
+              <Stack direction="row" spacing={3}>
+                <Avatar
+                  src={faker.image.avatar()}
+                  sx={{ height: 56, width: 56 }}
+                />
+                <Stack spacing={0.5}>
+                  <Typography variant="article">{`${faker.name.firstName()} ${faker.name.lastName()}`}</Typography>
+                  <Typography variant="body2">
+                    {faker.random.words()}
+                  </Typography>
+                </Stack>
+              </Stack>
+              {/* List */}
+              <Stack spacing={4}>
+                {list.map(({ key, icon, title, onclick }) => {
+                  return (
+                    <>
+                      <Stack
+                        onClick={onclick}
+                        sx={{ cursor: "pointer" }}
+                        spacing={2}
+                      >
+                        <Stack
+                          alignItems={"center"}
+                          direction="row"
+                          spacing={2}
+                        >
+                          {icon}
+                          <Typography variant="body2">{title}</Typography>
+                        </Stack>
+                        {key !== 7 && <Divider />}
+                      </Stack>
+                    </>
+                  );
+                })}
               </Stack>
             </Stack>
-            {/* List */}
-            <Stack spacing={4}>
-              {list.map(({ key, icon, title, onclick }) => {
-                return (
-                  <>
-                    <Stack
-                      onClick={onclick}
-                      sx={{ cursor: "pointer" }}
-                      spacing={2}
-                    >
-                      <Stack alignItems={"center"} direction="row" spacing={2}>
-                        {icon}
-                        <Typography variant="body2">{title}</Typography>
-                      </Stack>
-                      {key !== 7 && <Divider />}
-                    </Stack>
-                  </>
-                );
-              })}
-            </Stack>
-          </Stack>
-        </SimpleBar>
-          </Box>
+          </SimpleBar>
+        </Box>
         {/* Right Pane */}
         <Box
           sx={{
@@ -181,8 +190,12 @@ const Settings = () => {
       {openTheme && (
         <ThemeDialog open={openTheme} handleClose={handleCloseTheme} />
       )}
-      {openShortcuts && <ShortcutDialog open={openShortcuts} handleClose={handleCloseShortcuts} /> }
-      
+      {openShortcuts && (
+        <ShortcutDialog
+          open={openShortcuts}
+          handleClose={handleCloseShortcuts}
+        />
+      )}
     </>
   );
 };

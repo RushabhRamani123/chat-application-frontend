@@ -76,7 +76,6 @@ const ChatComponent = () => {
       height={"100%"}
       maxHeight={"100vh"}
       width={isMobile ? "100vw" : "auto"}
-
     >
       {/*  */}
       <ChatHeader />
@@ -87,7 +86,7 @@ const ChatComponent = () => {
           flexGrow: 1,
           overflow: "scroll",
           // apply here the scrollbar for the new itel
-          "&::-webkit-scrollbar": {display: "none"},
+          "&::-webkit-scrollbar": { display: "none" },
           backgroundColor:
             theme.palette.mode === "light"
               ? "#F0F4FA"
@@ -97,7 +96,7 @@ const ChatComponent = () => {
         }}
       >
         {/* <SimpleBarStyle timeout={500} clickOnTrack={false}> */}
-          <Conversation menu={true} isMobile={isMobile} />
+        <Conversation menu={true} isMobile={isMobile} />
         {/* </SimpleBarStyle> */}
       </Box>
 
@@ -109,4 +108,4 @@ const ChatComponent = () => {
 
 export default ChatComponent;
 
-export {Conversation};
+export { Conversation };
