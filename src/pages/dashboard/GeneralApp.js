@@ -9,7 +9,7 @@ import NoChat from "../../assets/Illustration/NoChat";
 import { useSelector } from "react-redux";
 import StarredMessages from "../../sections/Dashboard/StarredMessages";
 import Media from "../../sections/Dashboard/SharedMessages";
-import socket from "../../socket";
+import { socket } from "../../socket";
 
 const GeneralApp = () => {
   const [searchParams] = useSearchParams();

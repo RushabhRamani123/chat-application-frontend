@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -13,9 +13,8 @@ import {
   MagnifyingGlass,
   Users,
 } from "phosphor-react";
-// import { SimpleBarStyle } from "../../components/Scrollbar";
-import SimpleBar from 'simplebar-react';
-import 'simplebar-react/dist/simplebar.min.css';
+import SimpleBar from "simplebar-react";
+import "simplebar-react/dist/simplebar.min.css";
 import { useTheme } from "@mui/material/styles";
 import useResponsive from "../../hooks/useResponsive";
 import BottomNav from "../../layouts/dashboard/BottomNav";
@@ -27,11 +26,30 @@ import {
   StyledInputBase,
 } from "../../components/Search";
 import Friends from "../../sections/Dashboard/Friends";
+import { socket } from "../../socket";
+import { useDispatch, useSelector } from "react-redux";
+import { FetchDirectConversations } from "../../redux/slices/conversation";
+const user_id = window.localStorage.getItem("user_id");
 
 const Chats = () => {
   const theme = useTheme();
   const isDesktop = useResponsive("up", "md");
+
+  const dispatch = useDispatch();
+
+  const { conversations } = useSelector(
+    (state) => state.conversation.direct_chat
+  );
+  useEffect(() => {
+    socket.emit("get_direct_conversations", { user_id }, (data) => {
+      console.log(data);
+      dispatch(FetchDirectConversations({ conversations: data }));
+      alert("success");
+    });
+  }, []);
+
   const [openDialog, setOpenDialog] = useState(false);
+
   const handleCloseDialog = () => {
     setOpenDialog(false);
   };
@@ -54,10 +72,7 @@ const Chats = () => {
           boxShadow: "0px 0px 2px rgba(0, 0, 0, 0.25)",
         }}
       >
-        {!isDesktop && (
-          // Bottom Nav
-          <BottomNav />
-        )}
+        {!isDesktop && <BottomNav />}
 
         <Stack p={3} spacing={2} sx={{ maxHeight: "100vh" }}>
           <Stack
@@ -99,24 +114,33 @@ const Chats = () => {
             </Stack>
             <Divider />
           </Stack>
-          <Stack sx={{ flexGrow: 1, overflow: "scroll", height: "100%" , "&::-webkit-scrollbar": { display: "none" } }}>
-            <SimpleBar timeout={500} clickOnTrack={true}>
-            <Stack spacing={2.4}>
-              <Typography variant="subtitle2" sx={{ color: "#676667" }}>
-                Pinned
-              </Typography>
-              {/* Chat List */}
-              {ChatList.filter((el) => el.pinned).map((el, idx) => {
-                return <ChatElement {...el} />;
-              })}
-              <Typography variant="subtitle2" sx={{ color: "#676667" }}>
-                All Chats
-              </Typography>
-              {/* Chat List */}
-              {ChatList.filter((el) => !el.pinned).map((el, idx) => {
-                return <ChatElement {...el} />;
-              })}
-            </Stack>
+          <Stack
+            sx={{
+              flexGrow: 1,
+              overflow: "scroll",
+              height: "100%",
+              "&::-webkit-scrollbar": { display: "none" },
+            }}
+          >
+            <SimpleBar timeout={500} clickOnTrack={false}>
+              <Stack spacing={2.4}>
+                {/* <Typography variant="subtitle2" sx={{ color: "#676667" }}>
+                  Pinned
+                </Typography>
+                {/* Chat List */}
+                {/* {ChatList.filter((el) => el.pinned).map((el, idx) => {
+                  return <ChatElement {...el} />;
+                })} */} 
+                <Typography variant="subtitle2" sx={{ color: "#676667" }}>
+                  All Chats
+                </Typography>
+                {/* Chat List */}
+                {conversations
+                  .filter((el) => !el.pinned)
+                  .map((el, idx) => {
+                    return <ChatElement {...el} />;
+                  })}
+              </Stack>
             </SimpleBar>
           </Stack>
         </Stack>
