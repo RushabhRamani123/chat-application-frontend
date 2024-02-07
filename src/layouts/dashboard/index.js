@@ -5,7 +5,7 @@ import useResponsive from "../../hooks/useResponsive";
 import SideNav from "./SideBar";
 import { useDispatch, useSelector } from "react-redux";
 import { FetchUserProfile, SelectConversation, showSnackbar } from "../../redux/slices/app";
-import { socket, connectSocket } from "../../socket";
+import {socket} from "../../socket";
 import {
   UpdateDirectConversation,
   AddDirectConversation,
@@ -59,9 +59,7 @@ const DashboardLayout = () => {
 
       window.onload();
 
-      if (!socket) {
-        connectSocket(user_id);
-      }
+      
 
       socket.on("audio_call_notification", (data) => {
         // TODO => dispatch an action to add this in call_queue

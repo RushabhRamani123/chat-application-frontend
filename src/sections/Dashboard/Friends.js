@@ -16,7 +16,7 @@ const UsersList = () => {
   const dispatch = useDispatch();
 
   const { users } = useSelector((state) => state.app);
-
+  console.log(JSON.stringify(users));
   useEffect(() => {
     dispatch(FetchUsers());
   }, []);

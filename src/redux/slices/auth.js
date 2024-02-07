@@ -135,11 +135,13 @@ export function LoginUser(formValues) {
         }
       )
       .then(function (response) {
-        console.log(response);
+        console.log(response.data);
+
         dispatch(
           slice.actions.logIn({
             isLoggedIn: true,
             token: response.data.token,
+          //  user: response.data.user,
           })
         );
         dispatch(

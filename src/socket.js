@@ -1,11 +1,5 @@
-import io from "socket.io-client"; // Add this
-
+import io from "socket.io-client"; 
+// const user= window.localStorage.getItem("user")._id;
 let socket;
-
-const connectSocket = (user_id) => {
-  socket = io("http://localhost:3000", {
-    query: `user_id=${window.localStorage.getItem("user_id")}`
-  });
-} // Add this -- our server will run on port 4000, so we connect to it from here
-
-export {socket, connectSocket};
+socket = io("http://localhost:3000", {  headers: {} });
+export {socket};

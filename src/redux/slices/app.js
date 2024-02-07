@@ -171,7 +171,6 @@ export function FetchFriends() {
     await axios
       .get(
         "/user/get-friends",
-
         {
           headers: {
             "Content-Type": "application/json",
@@ -248,6 +247,7 @@ export const FetchUserProfile = () => {
       })
       .then((response) => {
         console.log(response);
+        window.localStorage.setItem("user", JSON.stringify(response.data.data._id));
         dispatch(slice.actions.fetchUser({ user: response.data.data }));
       })
       .catch((err) => {

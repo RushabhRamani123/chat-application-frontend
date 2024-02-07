@@ -11,14 +11,18 @@ import {
 import { styled, useTheme } from "@mui/material/styles";
 import { Chat } from "phosphor-react";
 import { socket } from "../socket";
-
-const user_id = window.localStorage.getItem("user_id");
-
+console.log(JSON.stringify(window.localStorage.getItem("user")));
+const  _kjkid  = window.localStorage.getItem("user");
+const user_id = _kjkid;
+const userString = window.localStorage.getItem("user");
+const user = userString.replace(/"/g, ''); // Remove double quotes from the string
+console.log(user); // Log the cleaned string to the console
 const StyledChatBox = styled(Box)(({ theme }) => ({
   "&:hover": {
     cursor: "pointer",
   },
 }));
+
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
@@ -90,7 +94,8 @@ const UserElement = ({ img, firstName, lastName, online, _id }) => {
         <Stack direction={"row"} spacing={2} alignItems={"center"}>
           <Button
             onClick={() => {
-              socket.emit("friend_request", { to: _id, from: user_id }, () => {
+            //  alert(typeof(_id));
+              socket.emit("friend_request", { to: _id, from: user  }, () => {
                 alert("request sent");
               });
             }}
@@ -216,7 +221,7 @@ const FriendElement = ({
           <IconButton
             onClick={() => {
               // start a new conversation
-              socket.emit("start_conversation", { to: _id, from: user_id });
+              socket.emit("start_conversation", { to: _id, from: user });
             }}
           >
             <Chat />
