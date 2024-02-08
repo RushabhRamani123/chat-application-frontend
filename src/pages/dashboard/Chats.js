@@ -29,8 +29,8 @@ import Friends from "../../sections/Dashboard/Friends";
 import { socket } from "../../socket";
 import { useDispatch, useSelector } from "react-redux";
 import { FetchDirectConversations } from "../../redux/slices/conversation";
-const user_id = window.localStorage.getItem("user_id");
-
+const user_= window.localStorage.getItem("user");
+const user_id = user_.replace(/"/g, '');
 const Chats = () => {
   const theme = useTheme();
   const isDesktop = useResponsive("up", "md");

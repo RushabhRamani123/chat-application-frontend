@@ -81,12 +81,7 @@ const slice = createSlice({
     },
   },
 });
-
-// Reducer
 export default slice.reducer;
-
-// ----------------------------------------------------------------------
-
 export const closeSnackBar = () => async (dispatch, getState) => {
   dispatch(slice.actions.closeSnackBar());
 };

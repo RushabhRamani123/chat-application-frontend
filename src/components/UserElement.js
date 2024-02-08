@@ -22,8 +22,6 @@ const StyledChatBox = styled(Box)(({ theme }) => ({
     cursor: "pointer",
   },
 }));
-
-
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
     backgroundColor: "#44b700",
@@ -52,7 +50,6 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
     },
   },
 }));
-
 const UserElement = ({ img, firstName, lastName, online, _id }) => {
   const theme = useTheme();
 
@@ -107,7 +104,6 @@ const UserElement = ({ img, firstName, lastName, online, _id }) => {
     </StyledChatBox>
   );
 };
-
 const FriendRequestElement = ({
   img,
   firstName,
@@ -168,9 +164,7 @@ const FriendRequestElement = ({
     </StyledChatBox>
   );
 };
-
 // FriendElement
-
 const FriendElement = ({
   img,
   firstName,
@@ -231,5 +225,4 @@ const FriendElement = ({
     </StyledChatBox>
   );
 };
-
 export { UserElement, FriendRequestElement, FriendElement };
