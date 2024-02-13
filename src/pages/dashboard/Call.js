@@ -6,6 +6,8 @@ import {
   Typography,
   Link,
 } from "@mui/material";
+import SimpleBar from 'simplebar-react';
+import 'simplebar-react/dist/simplebar.min.css';
 import { MagnifyingGlass, Phone } from "phosphor-react";
 import React, { useState } from "react";
 import {
@@ -40,14 +42,16 @@ const Call = () => {
                 ? "#F8FAFF"
                 : theme.palette.background,
             boxShadow: "0px 0px 2px rgba(0, 0, 0, 0.25)",
+            "&::-webkit-scrollbar": { display: "none"} 
           }}
         >
+            
           <Stack p={3} spacing={2} sx={{ maxHeight: "100vh" }}>
             <Stack
               alignItems={"center"}
               justifyContent="space-between"
               direction="row"
-            >
+              >
               <Typography variant="h5">Call Log</Typography>
             </Stack>
             <Stack sx={{ width: "100%" }}>
@@ -58,14 +62,14 @@ const Call = () => {
                 <StyledInputBase
                   placeholder="Search…"
                   inputProps={{ "aria-label": "search" }}
-                />
+                  />
               </Search>
             </Stack>
             <Stack
               justifyContent={"space-between"}
               alignItems={"center"}
               direction={"row"}
-            >
+              >
               <Typography variant="subtitle2" sx={{}} component={Link}>
                 Start a conversation
               </Typography>
@@ -81,12 +85,16 @@ const Call = () => {
                 height: "100%",
                 "&::-webkit-scrollbar": { display: "none" },
               }}
-            >
+              >
+              <SimpleBar  style={{ height: "100vh" }}
+              timeout={500}
+            clickOnTrack={false}>
               <Stack spacing={2.4}>
                 {CallList.map((el, idx) => {
                   return <CallLogElement key={idx} {...el} />;
                 })}
               </Stack>
+         </SimpleBar>
             </Stack>
           </Stack>
         </Box>

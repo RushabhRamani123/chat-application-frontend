@@ -10,6 +10,8 @@ import {
 import { MagnifyingGlass, Plus } from "phosphor-react";
 import { useTheme } from "@mui/material/styles";
 // import { SimpleBarStyle } from "../../components/Scrollbar";
+import SimpleBar from 'simplebar-react';
+import 'simplebar-react/dist/simplebar.min.css';
 import { ChatList } from "../../data";
 import ChatElement from "../../components/ChatElement";
 import {
@@ -46,9 +48,10 @@ const Group = () => {
                 : theme.palette.background,
 
             boxShadow: "0px 0px 2px rgba(0, 0, 0, 0.25)",
+            " &::-webkit-scrollbar": { display: "none"} 
           }}
         >
-          <Stack p={3} spacing={2} sx={{ maxHeight: "100vh" }}>
+          <Stack p={3} spacing={2} sx={{ maxHeight: "100vh" , }}>
             <Stack
               alignItems={"center"}
               justifyContent="space-between"
@@ -85,8 +88,8 @@ const Group = () => {
                 flexGrow: 1,
                 overflow: "scroll",
                 height: "100%",
-                "&::-webkit-scrollbar": { display: "none" },
                 widht: "100%",
+                " &::-webkit-scrollbar": { display: "none"}
               }}
             >
               {/* <SimpleBarStyle timeout={500} clickOnTrack={false}> */}
@@ -108,11 +111,15 @@ const Group = () => {
                   </Typography>
                 </Stack>
                 {/* Chat List */}
+                <SimpleBar style={{ height: "100vh" }}
+              timeout={500}
+            clickOnTrack={false}>
                 <Stack>
                   {ChatList.filter((el) => !el.pinned).map((el, idx) => {
                     return <ChatElement {...el} />;
                   })}
                 </Stack>
+               </SimpleBar>
               </Stack>
               {/* </SimpleBarStyle> */}
             </Stack>

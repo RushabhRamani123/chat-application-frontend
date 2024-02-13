@@ -18,9 +18,8 @@ import {
   User,
 } from "phosphor-react";
 import { useTheme, styled } from "@mui/material/styles";
-import React, { useRef, useState } from "react";
+import React,{ useRef, useState } from "react";
 import useResponsive from "../../hooks/useResponsive";
-
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import { socket } from "../../socket";
@@ -73,7 +72,7 @@ const ChatInput = ({
   value,
   inputRef,
 }) => {
-  const [openActions, setOpenActions] = React.useState(false);
+  const [openActions, setOpenActions] = useState(false);
 
   return (
     <StyledInput
@@ -95,7 +94,7 @@ const ChatInput = ({
                 display: openActions ? "inline-block" : "none",
               }}
             >
-              {Actions.map((el) => (
+              {Actions?.map((el) => (
                 <Tooltip placement="right" title={el.title}>
                   <Fab
                     onClick={() => {
@@ -163,13 +162,14 @@ const Footer = () => {
     (state) => state.conversation.direct_chat
   );
 
-  const user_id = window.localStorage.getItem("user_id");
-
+  const user = window.localStorage.getItem("user");
+  const user_id = JSON.parse(user);
+  
   const isMobile = useResponsive("between", "md", "xs", "sm");
 
   const { sideBar, room_id } = useSelector((state) => state.app);
 
-  const [openPicker, setOpenPicker] = React.useState(false);
+  const [openPicker, setOpenPicker] = useState(false);
 
   const [value, setValue] = useState("");
   const inputRef = useRef(null);
@@ -252,7 +252,9 @@ const Footer = () => {
               justifyContent="center"
             >
               <IconButton
-                onClick={() => {
+                onClick={() =>
+                {
+                  // alert(user_id);
                   socket.emit("text_message", {
                     message: linkify(value),
                     conversation_id: room_id,

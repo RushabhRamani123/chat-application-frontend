@@ -8,12 +8,13 @@ import {
   IconButton,
   Divider,
 } from "@mui/material";
+import { useState, useEffect } from "react";
 import { useTheme, alpha } from "@mui/material/styles";
 import { DotsThreeVertical, DownloadSimple, Image } from "phosphor-react";
 import { Message_options } from "../../data";
 import { Link } from "react-router-dom";
 import truncateString from "../../utils/truncate";
-
+import Embed from "react-embed";
 const MessageOption = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -54,6 +55,8 @@ const MessageOption = () => {
 
 const TextMsg = ({ el, menu }) => {
   const theme = useTheme();
+  // how to remove the sidebar using the css 
+
   return (
     <Stack direction="row" justifyContent={el.incoming ? "start" : "end"}>
       <Box
@@ -158,6 +161,18 @@ const DocMsg = ({ el, menu }) => {
 };
 const LinkMsg = ({ el, menu }) => {
   const theme = useTheme();
+  const [url, setUrl] = useState('');
+  const htmlString = `<a href="https://www.blackbox.ai/" target="_blank">http://localhost:3001/app?id=65c63c991c1209fb84b6a941&type=individual-chat#loaded</a>`;
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(htmlString, 'text/html');
+  const url_element = doc.querySelector('a').href;
+  useEffect(() => {
+    setUrl(el.message);
+
+
+alert(url);
+  }, [el.message]);
+
   return (
     <Stack direction="row" justifyContent={el.incoming ? "start" : "end"}>
       <Box
@@ -182,30 +197,21 @@ const LinkMsg = ({ el, menu }) => {
               borderRadius: 1,
             }}
           >
-            <img
-              src={el.preview}
-              alt={el.message}
-              style={{ maxHeight: 210, borderRadius: "10px" }}
-            />
             <Stack direction={"column"} spacing={2}>
-              <Typography variant="subtitle2" textAlign={"start"}>
-                Creating Chat App using MERN
-              </Typography>
-              <Typography
-                component={Link}
-                to="//https://www.youtube.com"
-                variant="subtitle2"
-                sx={{ color: theme.palette.primary.main }}
-              >
-                {truncateString("www.youtube.com/watch/v12uqywHTY2", 16)}
-              </Typography>
+              {url && (
+                <Embed
+                  width="300px"
+                  isDark
+                  url={"https://www.blackbox.ai/"}
+                />
+              )}
             </Stack>
           </Stack>
           <Typography
             variant="body2"
             color={el.incoming ? theme.palette.text : "#fff"}
           >
-            {el.message}
+            <div dangerouslySetInnerHTML={{ __html: el.message }}></div>
           </Typography>
         </Stack>
       </Box>

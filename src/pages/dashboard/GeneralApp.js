@@ -1,6 +1,7 @@
 import React from "react";
 import { useTheme } from "@mui/material/styles";
 import { Box, Stack, Typography } from "@mui/material";
+
 import { Link, useSearchParams } from "react-router-dom";
 import ChatComponent from "./Conversation";
 import Chats from "./Chats";
@@ -9,19 +10,13 @@ import NoChat from "../../assets/Illustration/NoChat";
 import { useSelector } from "react-redux";
 import StarredMessages from "../../sections/Dashboard/StarredMessages";
 import Media from "../../sections/Dashboard/SharedMessages";
-import { socket } from "../../socket";
 
 const GeneralApp = () => {
   const [searchParams] = useSearchParams();
 
   const theme = useTheme();
 
-  const { sideBar } = useSelector((state) => state.app);
-
-  // Add this
-  const joinRoom = () => {
-    socket.emit("hello", { message: "Hi there" });
-  };
+  const { sideBar, room_id, chat_type } = useSelector((state) => state.app);
 
   return (
     <>
@@ -41,11 +36,12 @@ const GeneralApp = () => {
               searchParams.get("type") === "individual-chat" &&
               searchParams.get("id")
                 ? "0px"
-                : "6px solid #0162C4",
-          }}
+                : "6px solid #0162C4", "&::-webkit-scrollbar": { display: "none"}
+
+              }}                
         >
-          {searchParams.get("type") === "individual-chat" &&
-          searchParams.get("id") ? (
+          {chat_type === "individual" &&
+          room_id !== null ? (
             <ChatComponent />
           ) : (
             <Stack

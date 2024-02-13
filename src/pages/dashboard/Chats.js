@@ -13,12 +13,11 @@ import {
   MagnifyingGlass,
   Users,
 } from "phosphor-react";
-import SimpleBar from "simplebar-react";
-import "simplebar-react/dist/simplebar.min.css";
+import SimpleBar from 'simplebar-react';
+import 'simplebar-react/dist/simplebar.min.css';
 import { useTheme } from "@mui/material/styles";
 import useResponsive from "../../hooks/useResponsive";
 import BottomNav from "../../layouts/dashboard/BottomNav";
-import { ChatList } from "../../data";
 import ChatElement from "../../components/ChatElement";
 import {
   Search,
@@ -29,22 +28,24 @@ import Friends from "../../sections/Dashboard/Friends";
 import { socket } from "../../socket";
 import { useDispatch, useSelector } from "react-redux";
 import { FetchDirectConversations } from "../../redux/slices/conversation";
-const user_= window.localStorage.getItem("user");
-const user_id = user_.replace(/"/g, '');
+
+const user = window.localStorage.getItem("user");
+const user_id = JSON.parse(user);
+alert(user_id);
 const Chats = () => {
   const theme = useTheme();
   const isDesktop = useResponsive("up", "md");
 
   const dispatch = useDispatch();
 
-  const { conversations } = useSelector(
-    (state) => state.conversation.direct_chat
-  );
+  const {conversations} = useSelector((state) => state.conversation.direct_chat);
+
   useEffect(() => {
     socket.emit("get_direct_conversations", { user_id }, (data) => {
-      console.log(data);
+      console.log(data); // this data is the list of conversations
+      // dispatch action
+
       dispatch(FetchDirectConversations({ conversations: data }));
-      alert("success");
     });
   }, []);
 
@@ -72,7 +73,10 @@ const Chats = () => {
           boxShadow: "0px 0px 2px rgba(0, 0, 0, 0.25)",
         }}
       >
-        {!isDesktop && <BottomNav />}
+        {!isDesktop && (
+          // Bottom Nav
+          <BottomNav />
+        )}
 
         <Stack p={3} spacing={2} sx={{ maxHeight: "100vh" }}>
           <Stack
@@ -114,34 +118,25 @@ const Chats = () => {
             </Stack>
             <Divider />
           </Stack>
-          <Stack
-            sx={{
-              flexGrow: 1,
-              overflow: "scroll",
-              height: "100%",
-              "&::-webkit-scrollbar": { display: "none" },
-            }}
-          >
-            <SimpleBar timeout={500} clickOnTrack={false}>
-              <Stack spacing={2.4}>
+          <Stack sx={{ flexGrow: 1, overflow: "scroll",  " &::-webkit-scrollbar": { display: "none"}}}>
+            {/* <SimpleBar style={{ height: "10" }} timeout={500} clickOnTrack={false}> */}
+              <Stack spacing={2.4 } sx={{"&::-webkit-scrollbar": { display: "none"}}}>
                 {/* <Typography variant="subtitle2" sx={{ color: "#676667" }}>
                   Pinned
-                </Typography>
+                </Typography> */}
                 {/* Chat List */}
                 {/* {ChatList.filter((el) => el.pinned).map((el, idx) => {
                   return <ChatElement {...el} />;
-                })} */} 
+                })} */}
                 <Typography variant="subtitle2" sx={{ color: "#676667" }}>
                   All Chats
                 </Typography>
                 {/* Chat List */}
-                {conversations
-                  .filter((el) => !el.pinned)
-                  .map((el, idx) => {
-                    return <ChatElement {...el} />;
-                  })}
+                {conversations?.filter((el) => !el.pinned).map((el, idx) => {
+                  return <ChatElement {...el} />;
+                })}
               </Stack>
-            </SimpleBar>
+            {/* </SimpleBar> */}
           </Stack>
         </Stack>
       </Box>

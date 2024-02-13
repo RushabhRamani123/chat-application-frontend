@@ -11,12 +11,9 @@ import {
 import { styled, useTheme } from "@mui/material/styles";
 import { Chat } from "phosphor-react";
 import { socket } from "../socket";
-console.log(JSON.stringify(window.localStorage.getItem("user")));
-const  _kjkid  = window.localStorage.getItem("user");
-const user_id = _kjkid;
-const userString = window.localStorage.getItem("user");
-const user = userString.replace(/"/g, ''); // Remove double quotes from the string
-console.log(user); // Log the cleaned string to the console
+
+const user = window.localStorage.getItem("user");
+const user_id = JSON.parse(user);
 const StyledChatBox = styled(Box)(({ theme }) => ({
   "&:hover": {
     cursor: "pointer",
@@ -91,8 +88,7 @@ const UserElement = ({ img, firstName, lastName, online, _id }) => {
         <Stack direction={"row"} spacing={2} alignItems={"center"}>
           <Button
             onClick={() => {
-            //  alert(typeof(_id));
-              socket.emit("friend_request", { to: _id, from: user  }, () => {
+              socket.emit("friend_request", { to: _id, from: user_id }, () => {
                 alert("request sent");
               });
             }}
@@ -169,8 +165,6 @@ const FriendElement = ({
   img,
   firstName,
   lastName,
-  incoming,
-  missed,
   online,
   _id,
 }) => {
@@ -214,8 +208,7 @@ const FriendElement = ({
         <Stack direction={"row"} spacing={2} alignItems={"center"}>
           <IconButton
             onClick={() => {
-              // start a new conversation
-              socket.emit("start_conversation", { to: _id, from: user });
+              socket.emit("start_conversation", { to: _id, from: user_id });
             }}
           >
             <Chat />
@@ -225,4 +218,5 @@ const FriendElement = ({
     </StyledChatBox>
   );
 };
+
 export { UserElement, FriendRequestElement, FriendElement };

@@ -132,7 +132,7 @@ export function FetchUsers() {
       )
       .then((response) => {
         console.log(response);
-        dispatch(slice.actions.updateUsers({ users: response.data.data }));
+        dispatch(slice.actions.updateUsers({ users: response.data }));
       })
       .catch((err) => {
         console.log(err);

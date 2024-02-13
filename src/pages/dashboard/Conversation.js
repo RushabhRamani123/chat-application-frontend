@@ -1,8 +1,8 @@
 import { Stack, Box } from "@mui/material";
 import React, { useEffect, useRef } from "react";
 import { useTheme } from "@mui/material/styles";
-// import { SimpleBarStyle } from "../../components/Scrollbar";
-// import {Conversation} from "../../sections/dashboard/Conversation"
+import SimpleBar from 'simplebar-react';
+import 'simplebar-react/dist/simplebar.min.css';
 import { ChatHeader, ChatFooter } from "../../components/Chat";
 import useResponsive from "../../hooks/useResponsive";
 import { Chat_History } from "../../data";
@@ -41,8 +41,8 @@ const Conversation = ({ isMobile, menu }) => {
     dispatch(SetCurrentConversation(current));
   }, []);
   return (
-    <Box p={isMobile ? 1 : 3}>
-      <Stack spacing={3}>
+    <Box p={isMobile ? 1 : 3} sx={{"&::-webkit-scrollbar": { display: "none"}}} >
+      <Stack spacing={2} >
         {current_messages.map((el, idx) => {
           switch (el.type) {
             case "divider":
@@ -129,11 +129,14 @@ const ChatComponent = () => {
               : theme.palette.background,
 
           boxShadow: "0px 0px 2px rgba(0, 0, 0, 0.25)",
+          "&::-webkit-scrollbar": { display: "none"}
         }}
       >
-        {/* <SimpleBarStyle timeout={500} clickOnTrack={false}> */}
+        <SimpleBar style={{ height: "100vh" }}
+              timeout={500}
+            clickOnTrack={false}>
           <Conversation menu={true} isMobile={isMobile} />
-        {/* </SimpleBarStyle> */}
+        </SimpleBar>
       </Box>
 
       {/*  */}
