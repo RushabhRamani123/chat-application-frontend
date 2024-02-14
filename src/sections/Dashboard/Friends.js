@@ -17,14 +17,15 @@ const UsersList = () => {
 
   const { users } = useSelector((state) => state.app);
   console.log(useSelector((state) => state.app));
-  console.log(JSON.stringify(users));
+  console.log(JSON.stringify(users.data));
+  const user = users.data;
   useEffect(() => {
     dispatch(FetchUsers());
   }, []);
 
   return (
     <>
-      {users.map((el, idx) => {
+      {user?.map((el, idx) => {
         return <UserElement key={idx} {...el} />;
       })}
     </>

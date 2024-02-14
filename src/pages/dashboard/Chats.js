@@ -31,7 +31,7 @@ import { FetchDirectConversations } from "../../redux/slices/conversation";
 
 const user = window.localStorage.getItem("user");
 const user_id = JSON.parse(user);
-alert(user_id);
+// alert(user_id);
 const Chats = () => {
   const theme = useTheme();
   const isDesktop = useResponsive("up", "md");
@@ -39,12 +39,12 @@ const Chats = () => {
   const dispatch = useDispatch();
 
   const {conversations} = useSelector((state) => state.conversation.direct_chat);
-
+  // alert(JSON.stringify(conversations));
+  console.log(conversations);
   useEffect(() => {
     socket.emit("get_direct_conversations", { user_id }, (data) => {
       console.log(data); // this data is the list of conversations
       // dispatch action
-
       dispatch(FetchDirectConversations({ conversations: data }));
     });
   }, []);
@@ -136,7 +136,7 @@ const Chats = () => {
                   return <ChatElement {...el} />;
                 })}
               </Stack>
-            {/* </SimpleBar> */}
+            {/*</SimpleBar>*/}
           </Stack>
         </Stack>
       </Box>

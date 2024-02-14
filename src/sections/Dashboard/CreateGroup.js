@@ -14,7 +14,7 @@ import { useForm } from "react-hook-form";
 import FormProvider from "../../components/hook-form/FormProvider";
 import { RHFTextField } from "../../components/hook-form";
 import RHFAutocomplete from "../../components/hook-form/RHFAutocomplete";
-
+import { socket } from "../../socket";
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -69,7 +69,7 @@ const CreateGroupForm = ({ handleClose }) => {
       console.error(error);
     }
   };
-
+  const { title, members } = watch();
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>
@@ -89,7 +89,12 @@ const CreateGroupForm = ({ handleClose }) => {
           justifyContent={"end"}
         >
           <Button onClick={handleClose}>Cancel</Button>
-          <Button type="submit" variant="contained">
+          <Button type="submit" variant="contained"
+            onClick={() => { 
+              socket.emit("createGroup", {title, members})
+
+             }}
+          >
             Create
           </Button>
         </Stack>
@@ -108,10 +113,8 @@ const CreateGroup = ({ open, handleClose }) => {
       keepMounted
       onClose={handleClose}
       aria-describedby="alert-dialog-slide-description"
-      sx={{ p: 4 }}
-    >
+      sx={{ p: 4 }}>
       <DialogTitle>{"Create New Group"}</DialogTitle>
-
       <DialogContent sx={{ mt: 4 }}>
         {/* Create Group Form */}
         <CreateGroupForm handleClose={handleClose} />

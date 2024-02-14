@@ -173,7 +173,11 @@ const Footer = () => {
 
   const [value, setValue] = useState("");
   const inputRef = useRef(null);
-
+  function handleKeyPress(event) {
+    if (event.key === 'Enter') {
+      alert('Enter key pressed!');
+    }
+  }
   function handleEmojiClick(emoji) {
     const input = inputRef.current;
 
@@ -236,6 +240,7 @@ const Footer = () => {
               setValue={setValue}
               openPicker={openPicker}
               setOpenPicker={setOpenPicker}
+              
             />
           </Stack>
           <Box
@@ -262,6 +267,7 @@ const Footer = () => {
                     to: current_conversation.user_id,
                     type: containsUrl(value) ? "Link" : "Text",
                   });
+                  setValue("");
                 }}
               >
                 <PaperPlaneTilt color="#ffffff" />

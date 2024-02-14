@@ -18,10 +18,10 @@ import {
   StyledInputBase,
 } from "../../components/Search";
 import CreateGroup from "../../sections/Dashboard/CreateGroup";
-
+import { useSelector } from "react-redux";
 const Group = () => {
   const [openDialog, setOpenDialog] = useState(false);
-
+  const {conversations} = useSelector((state) => state.conversation.direct_chat);
   const handleCloseDialog = () => {
     setOpenDialog(false);
   }
@@ -73,7 +73,7 @@ const Group = () => {
               direction={"row"}
             >
               <Typography variant="subtitle2" sx={{}} component={Link}>
-                Create New Group
+                Create New 
               </Typography>
               <IconButton onClick={handleOpenDialog}>
                 <Plus style={{ color: theme.palette.primary.main }} />
@@ -84,19 +84,15 @@ const Group = () => {
               {/* <SimpleBarStyle timeout={500} clickOnTrack={false}> */}
                 <Stack spacing={2.4}>
                   <Typography variant="subtitle2" sx={{ color: "#676667" }}>
-                    Pinned
-                  </Typography>
-                  {/* Chat List */}
-                  {ChatList.filter((el) => el.pinned).map((el, idx) => {
-                    return <ChatElement {...el} />;
-                  })}
-                  <Typography variant="subtitle2" sx={{ color: "#676667" }}>
                     All Chats
                   </Typography>
-                  {/* Chat List */}
+                  {/* Chat List
                   {ChatList.filter((el) => !el.pinned).map((el, idx) => {
                     return <ChatElement {...el} />;
-                  })}
+                  })} */}
+                  {/* {conversations.map((el, idx) => {
+                    
+                  })} */}
                 </Stack>
               {/* </SimpleBarStyle> */}
             </Stack>

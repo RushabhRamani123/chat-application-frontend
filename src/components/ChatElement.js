@@ -45,7 +45,7 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 
 const ChatElement = ({ img, name, msg, time, unread, online, id }) => {
   const dispatch = useDispatch();
-  const {room_id} = useSelector((state) => state.app);
+  const { room_id } = useSelector((state) => state.app);
   const selectedChatId = room_id?.toString();
 
   let isSelected = +selectedChatId === id;
@@ -59,7 +59,8 @@ const ChatElement = ({ img, name, msg, time, unread, online, id }) => {
   return (
     <StyledChatBox
       onClick={() => {
-        dispatch(SelectConversation({room_id: id}));
+        // alert(id);
+        dispatch(SelectConversation({ room_id: id }));
       }}
       sx={{
         width: "100%",
@@ -72,8 +73,7 @@ const ChatElement = ({ img, name, msg, time, unread, online, id }) => {
             : theme.palette.primary.main
           : theme.palette.mode === "light"
           ? "#fff"
-            : theme.palette.background.paper,
-        
+          : theme.palette.background.paper,
       }}
       p={2}
     >

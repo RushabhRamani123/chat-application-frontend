@@ -75,12 +75,12 @@ const DashboardLayout = () => {
       // });
 
       socket.on("new_message", (data) => {
-        alert(JSON.stringify(data));
+        // alert(JSON.stringify(data));
         const message = data.message;
         console.log(current_conversation, data);
         // check if msg we got is from currently selected conversation
         if (current_conversation?.id === data.conversation_id) {
-          alert("new message");
+          // alert("new message");
           dispatch(
             AddDirectMessage({
               id: message._id,
@@ -96,7 +96,7 @@ const DashboardLayout = () => {
 
       socket.on("start_chat", (data) => {
         console.log(data);
-        alert(JSON.stringify(conversations));
+        // alert(JSON.stringify(conversations));
         // add / update to conversation list
         const existing_conversation = conversations.find(
           (el) => el?.id === data._id

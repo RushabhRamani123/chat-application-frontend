@@ -128,6 +128,7 @@ export function FetchUsers() {
             "Content-Type": "application/json",
             Authorization: `Bearer ${getState().auth.token}`,
           },
+          
         }
       )
       .then((response) => {
