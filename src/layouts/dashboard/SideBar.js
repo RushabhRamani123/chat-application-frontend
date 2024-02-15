@@ -15,16 +15,16 @@ import { useNavigate } from "react-router-dom";
 const getPath = (index) => {
   switch (index) {
     case 0:
-      return "/app";
+      return "/app#loaded";
 
     case 1:
-      return "/group";
+      return "/group#loaded";
 
     case 2:
-      return "/call";
+      return "/call#loaded";
 
     case 3:
-      return "/settings";
+      return "/settings#loaded";
 
     default:
       break;
