@@ -41,7 +41,6 @@ const slice = createSlice({
     updateUser(state, action) {
       state.user = action.payload.user;
     },
-    // Toggle Sidebar
     toggleSideBar(state) {
       state.sideBar.open = !state.sideBar.open;
     },
@@ -51,7 +50,6 @@ const slice = createSlice({
     updateTab(state, action) {
       state.tab = action.payload.tab;
     },
-
     openSnackBar(state, action) {
       console.log(action.payload);
       state.snackbar.open = true;
@@ -100,7 +98,6 @@ export const showSnackbar =
       dispatch(slice.actions.closeSnackBar());
     }, 4000);
   };
-
 export function ToggleSidebar() {
   return async (dispatch, getState) => {
     dispatch(slice.actions.toggleSideBar());
@@ -116,7 +113,6 @@ export function UpdateTab(tab) {
     dispatch(slice.actions.updateTab(tab));
   };
 }
-
 export function FetchUsers() {
   return async (dispatch, getState) => {
     await axios
@@ -207,13 +203,11 @@ export function FetchFriendRequests() {
       });
   };
 }
-
 export const SelectConversation = ({ room_id }) => {
   return async (dispatch, getState) => {
     dispatch(slice.actions.selectConversation({ room_id }));
   };
 };
-
 export const FetchCallLogs = () => {
   return async (dispatch, getState) => {
     axios

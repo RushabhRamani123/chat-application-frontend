@@ -9,10 +9,8 @@ import {
 } from "@mui/material";
 import { MagnifyingGlass, Plus } from "phosphor-react";
 import { useTheme } from "@mui/material/styles";
-// import { SimpleBarStyle } from "../../components/Scrollbar";
 import SimpleBar from 'simplebar-react';
 import 'simplebar-react/dist/simplebar.min.css';
-import { ChatList } from "../../data";
 import ChatElement from "../../components/ChatElement";
 import {
   Search,
@@ -93,7 +91,7 @@ const Group = () => {
                 " &::-webkit-scrollbar": { display: "none"}
               }}
             >
-              {/* <SimpleBarStyle timeout={500} clickOnTrack={false}> */}
+              <SimpleBar timeout={500} clickOnTrack={false}>
               <Stack spacing={2.4}>
                
               
@@ -101,11 +99,14 @@ const Group = () => {
                 <Typography variant="subtitle2" sx={{ color: "#676667" }}>
                   Group Chats
                 </Typography>
-              </Stack>
+              
+                {conversations?.filter((el) => !el.pinned).map((el, idx) => {
+                  return <ChatElement {...el} />;
+                })}
+                </Stack>
                 
-                
               </Stack>
-              {/* </SimpleBarStyle> */}
+              </SimpleBar>
             </Stack>
           </Stack>
         </Box>

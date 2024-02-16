@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { faker } from "@faker-js/faker";
-// import { AWS_S3_REGION, S3_BUCKET_NAME } from "../../config";
 
 const user = window.localStorage.getItem("user");
 
@@ -14,7 +13,6 @@ const initialState = {
   },
   group_chat: {},
 };
-
 const slice = createSlice({
   name: "conversation",
   initialState,
@@ -39,7 +37,8 @@ const slice = createSlice({
       });
       console.log("This is the list "+JSON.stringify(list));
       state.direct_chat.conversations = list;
-    },    updateDirectConversation(state, action) {
+    },
+    updateDirectConversation(state, action) {
       const this_conversation = action.payload.conversation;
       state.direct_chat.conversations = state.direct_chat.conversations.map(
         (el) => {
@@ -104,12 +103,7 @@ const slice = createSlice({
     }
   },
 });
-
-// Reducer
 export default slice.reducer;
-
-// ----------------------------------------------------------------------
-
 export const FetchDirectConversations = ({ conversations }) => {
   return async (dispatch, getState) => {
     dispatch(slice.actions.fetchDirectConversations({ conversations }));
@@ -125,20 +119,16 @@ export const UpdateDirectConversation = ({ conversation }) => {
     dispatch(slice.actions.updateDirectConversation({ conversation }));
   };
 };
-
 export const SetCurrentConversation = (current_conversation) => {
   return async (dispatch, getState) => {
     dispatch(slice.actions.setCurrentConversation(current_conversation));
   };
 };
-
-
 export const FetchCurrentMessages = ({messages}) => {
   return async(dispatch, getState) => {
     dispatch(slice.actions.fetchCurrentMessages({messages}));
   }
 }
-
 export const AddDirectMessage = (message) => {
   return async (dispatch, getState) => {
     dispatch(slice.actions.addDirectMessage({message}));

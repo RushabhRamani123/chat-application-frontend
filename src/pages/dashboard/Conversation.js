@@ -1,8 +1,6 @@
 import { Stack, Box } from "@mui/material";
 import React, { useEffect, useRef } from "react";
 import { useTheme } from "@mui/material/styles";
-import SimpleBar from 'simplebar-react';
-import 'simplebar-react/dist/simplebar.min.css';
 import { ChatHeader, ChatFooter } from "../../components/Chat";
 import useResponsive from "../../hooks/useResponsive";
 import { Chat_History } from "../../data";
@@ -132,11 +130,9 @@ const ChatComponent = () => {
           "&::-webkit-scrollbar": { display: "none"}
         }}
       >
-        <SimpleBar style={{ height: "100vh" }}
-              timeout={500}
-            clickOnTrack={false}>
+      
           <Conversation menu={true} isMobile={isMobile} />
-        </SimpleBar>
+     
       </Box>
 
       {/*  */}

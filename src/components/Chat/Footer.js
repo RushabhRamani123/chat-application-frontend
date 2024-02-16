@@ -73,7 +73,7 @@ const ChatInput = ({
   inputRef,
 }) => {
   const [openActions, setOpenActions] = useState(false);
-
+  
   return (
     <StyledInput
       inputRef={inputRef}
@@ -137,6 +137,7 @@ const ChatInput = ({
             </InputAdornment>
           </Stack>
         ),
+        
       }}
     />
   );
@@ -174,8 +175,16 @@ const Footer = () => {
   const [value, setValue] = useState("");
   const inputRef = useRef(null);
   function handleKeyPress(event) {
-    if (event.key === 'Enter') {
-      alert('Enter key pressed!');
+    if (event.key === "Enter") {
+      event.preventDefault();
+      socket.emit("text_message", {
+        message: linkify(value),
+        conversation_id: room_id,
+        from: user_id,
+        to: current_conversation.user_id,
+        type: containsUrl(value) ? "Link" : "Text",
+      });
+      setValue("");
     }
   }
   function handleEmojiClick(emoji) {
@@ -235,13 +244,13 @@ const Footer = () => {
             </Box>
             {/* Chat Input */}
             <ChatInput
-              inputRef={inputRef}
-              value={value}
-              setValue={setValue}
-              openPicker={openPicker}
-              setOpenPicker={setOpenPicker}
-              
-            />
+  inputRef={inputRef}
+  value={value}
+  setValue={setValue}
+  openPicker={openPicker}
+  setOpenPicker={setOpenPicker}
+  handleKeyPress={handleKeyPress} 
+/>
           </Stack>
           <Box
             sx={{
@@ -259,7 +268,7 @@ const Footer = () => {
               <IconButton
                 onClick={() =>
                 {
-                  // alert(user_id);
+                 
                   socket.emit("text_message", {
                     message: linkify(value),
                     conversation_id: room_id,
