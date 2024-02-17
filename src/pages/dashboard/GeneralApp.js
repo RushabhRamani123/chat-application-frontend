@@ -32,11 +32,7 @@ const GeneralApp = () => {
               theme.palette.mode === "light"
                 ? "#FFF"
                 : theme.palette.background.paper,
-            borderBottom:
-              searchParams.get("type") === "individual-chat" &&
-              searchParams.get("id")
-                ? "0px"
-                : "6px solid #0162C4", "&::-webkit-scrollbar": { display: "none"}
+             "&::-webkit-scrollbar": { display: "none"}
 
               }}                
         >

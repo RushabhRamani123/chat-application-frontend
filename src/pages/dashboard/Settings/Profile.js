@@ -38,17 +38,7 @@ const Profile = () => {
         </Box>
 
         {/* Right Pane */}
-        <Box
-          sx={{
-            height: "100%",
-            width: "calc(100vw - 420px )",
-            backgroundColor: (theme) =>
-              theme.palette.mode === "light"
-                ? "#FFF"
-                : theme.palette.background.paper,
-            borderBottom: "6px solid #0162C4",
-          }}
-        ></Box>
+        
       </Stack>
     </>
   );
