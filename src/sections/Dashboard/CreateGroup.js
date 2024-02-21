@@ -21,7 +21,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 // const [value, setValue] = useState([]);
 const TAGS_OPTION = [];
-
+const user = window.localStorage.getItem("user");
+const user_id = JSON.parse(user);
 const CreateGroupForm = ({ handleClose }) => {
   const {conversations} = useSelector((state) => state.conversation.direct_chat);
   useEffect(() => {
@@ -101,6 +102,7 @@ const CreateGroupForm = ({ handleClose }) => {
             type="submit"
             variant="contained"
             onClick={() => {
+              members.push(user_id);
               socket.emit("createGroup", { title, members });
             }}
           >

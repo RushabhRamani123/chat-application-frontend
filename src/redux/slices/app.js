@@ -77,6 +77,13 @@ const slice = createSlice({
       state.chat_type = "individual";
       state.room_id = action.payload.room_id;
     },
+    fetchGroupData(state, action) {
+      state.group = action.payload.group;
+    },
+    selectGroup(state, action) {
+      state.chat_type = "group";
+      state.room_id = action.payload.room_id;
+    },
   },
 });
 export default slice.reducer;
@@ -291,5 +298,10 @@ export const UpdateUserProfile = (formValues) => {
       .catch((err) => {
         console.log(err);
       });
+  };
+};
+export const SelectGroup = ({ room_id }) => {
+  return async (dispatch) => {
+    dispatch(slice.actions.selectGroup({ room_id }));
   };
 };

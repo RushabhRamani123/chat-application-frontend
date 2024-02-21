@@ -60,7 +60,7 @@ const GeneralApp = () => {
                 </Link>
               </Typography>
             </Stack>
-          )}
+           )} 
         </Box>
         {sideBar.open &&
           (() => {

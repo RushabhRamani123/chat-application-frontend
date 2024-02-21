@@ -159,13 +159,11 @@ function containsUrl(text) {
 const Footer = () => {
   const theme = useTheme();
 
-  const { current_conversation } = useSelector(
-    (state) => state.conversation.direct_chat
-  );
-
+  const type = useSelector((state) => state.app.chat_type);
+  const {current_conversation} = useSelector((state) => type === "group" ? state.conversation.group_chat : state.conversation.direct_chat);
+  
   const user = window.localStorage.getItem("user");
   const user_id = JSON.parse(user);
-  
   const isMobile = useResponsive("between", "md", "xs", "sm");
 
   const { sideBar, room_id } = useSelector((state) => state.app);
@@ -268,16 +266,30 @@ const Footer = () => {
               <IconButton
                 onClick={() =>
                 {
+                 if (type !== "group") {
+                   socket.emit("text_message", {
+                     message: linkify(value),
+                     conversation_id: room_id,
+                     from: user_id,
+                     to: current_conversation.user_id,
+                     type: containsUrl(value) ? "Link" : "Text",
+                   });
+                   setValue("");
+                  }
+                  else {
+                    socket.emit("group_text_message", {
+                      message: linkify(value),
+                      conversation_id: room_id,
+                      from: user_id,
+                      to: current_conversation.participants,
+                      type: containsUrl(value) ? "Link" : "Text",
+                    })
+                    setValue("")
+                  }
+                }
+                  
+                 }
                  
-                  socket.emit("text_message", {
-                    message: linkify(value),
-                    conversation_id: room_id,
-                    from: user_id,
-                    to: current_conversation.user_id,
-                    type: containsUrl(value) ? "Link" : "Text",
-                  });
-                  setValue("");
-                }}
               >
                 <PaperPlaneTilt color="#ffffff" />
               </IconButton>

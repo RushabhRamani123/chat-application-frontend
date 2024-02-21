@@ -68,8 +68,8 @@ const ChatHeader = () => {
   const dispatch = useDispatch();
   const isMobile = useResponsive("between", "md", "xs", "sm");
   const theme = useTheme();
-
-  const {current_conversation} = useSelector((state) => state.conversation.direct_chat);
+  const type = useSelector((state) => state.app.chat_type);
+  const {current_conversation} = useSelector((state) => type === "group" ? state.conversation.group_chat : state.conversation.direct_chat);
 
   const [conversationMenuAnchorEl, setConversationMenuAnchorEl] =
     React.useState(null);

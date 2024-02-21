@@ -10,6 +10,7 @@ import {
   UpdateDirectConversation,
   AddDirectConversation,
   AddDirectMessage,
+  AddGroupDirectMessage
 } from "../../redux/slices/conversation";
 // import AudioCallNotification from "../../sections/Dashboard/Audio/CallNotification";
 // import VideoCallNotification from "../../sections/Dashboard/video/CallNotification";
@@ -33,10 +34,10 @@ const DashboardLayout = () => {
   //   (state) => statei.videoCall
   // );
   const { isLoggedIn } = useSelector((state) => state.auth);
-  const { conversations, current_conversation } = useSelector(
-    (state) => state.conversation.direct_chat
-  );
-
+  const type = useSelector((state) => state.app.chat_type);
+  const { conversations, current_conversation } = useSelector((state) =>
+  type === "group" ? state.conversation.group_chat : state.conversation.direct_chat
+);
   useEffect(() => {
     dispatch(FetchUserProfile());
   }, []);
@@ -132,9 +133,30 @@ const DashboardLayout = () => {
       socket.on("request_sent", (data) => {
         dispatch(showSnackbar({ severity: "success", message: data.message }));
       });
-    }
+      socket.on("group_new_message", (data) => {
 
-    // Remove event listener on component unmount
+        // alert(JSON.stringify(data));
+        // alert(JSON.stringify(current_conversation));
+      
+        const message = data.message;
+        console.log(current_conversation, data);
+        // check if msg we got is from currently selected conversation
+        // if (current_conversation?.id === data.conversation_id) {
+          // alert("new message");
+          dispatch(
+            AddGroupDirectMessage({
+              id: message._id,
+              type: "msg",
+              subtype: message.type,
+              message: message.text,
+              incoming: !(message.from === user_id),
+              outgoing: message.from === user_id,
+            }
+            )
+          );
+        // }
+      });
+    }
     return () => {
       socket?.off("new_friend_request");
       socket?.off("request_accepted");
@@ -142,6 +164,7 @@ const DashboardLayout = () => {
       socket?.off("start_chat");
       socket?.off("new_message");
       socket?.off("audio_call_notification");
+      socket?.off("group_new_message");
     };
   }, [isLoggedIn, socket]);
 
