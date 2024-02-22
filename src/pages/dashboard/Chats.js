@@ -112,11 +112,11 @@ const Chats = () => {
             </Search>
           </Stack>
           <Stack spacing={1}>
-            <Stack direction={"row"} spacing={1.5} alignItems="center">
+            {/* <Stack direction={"row"} spacing={1.5} alignItems="center">
               <ArchiveBox size={24} />
               <Button variant="text">Archive</Button>
-            </Stack>
-            <Divider />
+            </Stack> */}
+            {/* <Divider /> */}
           </Stack>
           <Stack sx={{ flexGrow: 1, overflow: "scroll",  " &::-webkit-scrollbar": { display: "none"}}}>
             {/* <SimpleBar style={{ height: "10" }} timeout={500} clickOnTrack={false}> */}

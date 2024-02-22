@@ -4,51 +4,59 @@ import { Navigate, Outlet } from "react-router-dom";
 import useResponsive from "../../hooks/useResponsive";
 import SideNav from "./SideBar";
 import { useDispatch, useSelector } from "react-redux";
-import { FetchUserProfile, SelectConversation, showSnackbar } from "../../redux/slices/app";
-import {socket, connectSocket} from "../../socket";
+import {
+  FetchUserProfile,
+  SelectConversation,
+  showSnackbar,
+} from "../../redux/slices/app";
+import { socket, connectSocket } from "../../socket";
 import {
   UpdateDirectConversation,
   AddDirectConversation,
   AddDirectMessage,
-  AddGroupDirectMessage
+  AddGroupDirectMessage,
 } from "../../redux/slices/conversation";
-// import AudioCallNotification from "../../sections/Dashboard/Audio/CallNotification";
-// import VideoCallNotification from "../../sections/Dashboard/video/CallNotification";
-// import {
-//   PushToAudioCallQueue,
-//   UpdateAudioCallDialog,
-// } from "../../redux/slices/audioCall";
-// import AudioCallDialog from "../../sections/Dashboard/Audio/CallDialog";
-// import VideoCallDialog from "../../sections/Dashboard/video/CallDialog";
-// import { PushToVideoCallQueue, UpdateVideoCallDialog } from "../../redux/slices/videoCall";
+import AudioCallNotification from "../../sections/Dashboard/Audio/CallNotification";
+import VideoCallNotification from "../../sections/Dashboard/video/CallNotification";
+import {
+  PushToAudioCallQueue,
+  UpdateAudioCallDialog,
+} from "../../redux/slices/audioCall";
+import AudioCallDialog from "../../sections/Dashboard/Audio/CallDialog";
+import VideoCallDialog from "../../sections/Dashboard/video/CallDialog";
+import {
+  PushToVideoCallQueue,
+  UpdateVideoCallDialog,
+} from "../../redux/slices/videoCall";
 
 const DashboardLayout = () => {
   const isDesktop = useResponsive("up", "md");
   const dispatch = useDispatch();
-  const  user_id_info = window.localStorage.getItem("user");
+  const user_id_info = window.localStorage.getItem("user");
   const user_id = JSON.parse(user_id_info);
-  // const { open_audio_notification_dialog, open_audio_dialog } = useSelector(
-  //   (state) => state.audioCall
-  // );
-  // const { open_video_notification_dialog, open_video_dialog } = useSelector(
-  //   (state) => statei.videoCall
-  // );
+  const { open_audio_notification_dialog, open_audio_dialog } = useSelector(
+    (state) => state.audioCall
+  );
+  const { open_video_notification_dialog, open_video_dialog } = useSelector(
+    (state) => state.videoCall
+  );
   const { isLoggedIn } = useSelector((state) => state.auth);
   const type = useSelector((state) => state.app.chat_type);
   const { conversations, current_conversation } = useSelector((state) =>
-  type === "group" ? state.conversation.group_chat : state.conversation.direct_chat
-);
+    type === "group"
+      ? state.conversation.group_chat
+      : state.conversation.direct_chat
+  );
   useEffect(() => {
     dispatch(FetchUserProfile());
   }, []);
-  
 
-  // const handleCloseAudioDialog = () => {
-  //   dispatch(UpdateAudioCallDialog({ state: false }));
-  // };
-  // const handleCloseVideoDialog = () => {
-  //   dispatch(UpdateVideoCallDialog({ state: false }));
-  // };
+  const handleCloseAudioDialog = () => {
+    dispatch(UpdateAudioCallDialog({ state: false }));
+  };
+  const handleCloseVideoDialog = () => {
+    dispatch(UpdateVideoCallDialog({ state: false }));
+  };
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -65,34 +73,32 @@ const DashboardLayout = () => {
         connectSocket(user_id);
       }
 
-      // socket.on("audio_call_notification", (data) => {
-      //   // TODO => dispatch an action to add this in call_queue
-      //   dispatch(PushToAudioCallQueue(data));
-      // });
-      
-      // socket.on("video_call_notification", (data) => {
-      //   // TODO => dispatch an action to add this in call_queue
-      //   dispatch(PushToVideoCallQueue(data));
-      // });
+      socket.on("audio_call_notification", (data) => {
+        // TODO => dispatch an action to add this in call_queue
+        dispatch(PushToAudioCallQueue(data));
+      });
+
+      socket.on("video_call_notification", (data) => {
+        // TODO => dispatch an action to add this in call_queue
+        dispatch(PushToVideoCallQueue(data));
+      });
 
       socket.on("new_message", (data) => {
         // alert(JSON.stringify(data));
         const message = data.message;
         console.log(current_conversation, data);
         // check if msg we got is from currently selected conversation
-        if (current_conversation?.id === data.conversation_id) {
-          // alert("new message");
-          dispatch(
-            AddDirectMessage({
-              id: message._id,
-              type: "msg",
-              subtype: message.type,
-              message: message.text,
-              incoming: message.to === user_id,
-              outgoing: message.from === user_id,
-            })
-          );
-        }
+
+        dispatch(
+          AddDirectMessage({
+            id: message._id,
+            type: "msg",
+            subtype: message.type,
+            message: message.text,
+            incoming: message.to === user_id,
+            outgoing: message.from === user_id,
+          })
+        );
       });
 
       socket.on("start_chat", (data) => {
@@ -134,26 +140,24 @@ const DashboardLayout = () => {
         dispatch(showSnackbar({ severity: "success", message: data.message }));
       });
       socket.on("group_new_message", (data) => {
-
         // alert(JSON.stringify(data));
         // alert(JSON.stringify(current_conversation));
-      
+
         const message = data.message;
         console.log(current_conversation, data);
         // check if msg we got is from currently selected conversation
         // if (current_conversation?.id === data.conversation_id) {
-          // alert("new message");
-          dispatch(
-            AddGroupDirectMessage({
-              id: message._id,
-              type: "msg",
-              subtype: message.type,
-              message: message.text,
-              incoming: !(message.from === user_id),
-              outgoing: message.from === user_id,
-            }
-            )
-          );
+        // alert("new message");
+        dispatch(
+          AddGroupDirectMessage({
+            id: message._id,
+            type: "msg",
+            subtype: message.type,
+            message: message.text,
+            incoming: !(message.from === user_id),
+            outgoing: message.from === user_id,
+          })
+        );
         // }
       });
     }
@@ -174,7 +178,10 @@ const DashboardLayout = () => {
 
   return (
     <>
-      <Stack direction="row" sx={{ "&::--webkit-scrollbar": { display: "none" } }}>
+      <Stack
+        direction="row"
+        sx={{ "&::--webkit-scrollbar": { display: "none" } }}
+      >
         {isDesktop && (
           // SideBar
           <SideNav />
@@ -182,7 +189,7 @@ const DashboardLayout = () => {
 
         <Outlet />
       </Stack>
-      {/* {open_audio_notification_dialog && (
+      {open_audio_notification_dialog && (
         <AudioCallNotification open={open_audio_notification_dialog} />
       )}
       {open_audio_dialog && (
@@ -199,9 +206,8 @@ const DashboardLayout = () => {
           open={open_video_dialog}
           handleClose={handleCloseVideoDialog}
         />
-      )} */}
+      )}
     </>
   );
 };
-
 export default DashboardLayout;

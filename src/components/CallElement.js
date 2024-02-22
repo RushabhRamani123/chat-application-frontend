@@ -14,6 +14,10 @@ import {
   VideoCamera,
   Phone,
 } from "phosphor-react";
+import { useDispatch } from "react-redux";
+import { StartAudioCall } from "../redux/slices/audioCall";
+import { StartVideoCall } from "../redux/slices/videoCall";
+// import { AWS_S3_REGION, S3_BUCKET_NAME } from "../config";
 
 const StyledChatBox = styled(Box)(({ theme }) => ({
   "&:hover": {
@@ -77,10 +81,14 @@ const CallLogElement = ({ img, name, incoming, missed, online, id }) => {
               anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
               variant="dot"
             >
-              <Avatar alt={name} src={img} />
+              <Avatar alt={name}
+                // src={`https://${S3_BUCKET_NAME}.s3.${AWS_S3_REGION}.amazonaws.com/${img}`}
+              />
             </StyledBadge>
           ) : (
-            <Avatar alt={name} src={img} />
+              <Avatar alt={name}
+                // src={`https://${S3_BUCKET_NAME}.s3.${AWS_S3_REGION}.amazonaws.com/${img}`}
+              />
           )}
           <Stack spacing={0.3}>
             <Typography variant="subtitle2">{name}</Typography>
@@ -104,7 +112,8 @@ const CallLogElement = ({ img, name, incoming, missed, online, id }) => {
   );
 };
 
-const CallElement = ({ img, name, incoming, missed, online, id }) => {
+const CallElement = ({ img, name, id, handleClose }) => {
+  const dispatch = useDispatch();
   const theme = useTheme();
 
   return (
@@ -125,27 +134,27 @@ const CallElement = ({ img, name, incoming, missed, online, id }) => {
       >
         <Stack direction="row" spacing={2}>
           {" "}
-          {online ? (
-            <StyledBadge
-              overlap="circular"
-              anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-              variant="dot"
-            >
-              <Avatar alt={name} src={img} />
-            </StyledBadge>
-          ) : (
-            <Avatar alt={name} src={img} />
-          )}
+          <Avatar alt={name} src={img} />
           <Stack spacing={0.3} alignItems="center" direction={"row"}>
             <Typography variant="subtitle2">{name}</Typography>
           </Stack>
         </Stack>
         <Stack direction={"row"} spacing={2} alignItems={"center"}>
-          <IconButton>
+          <IconButton
+            onClick={() => {
+              dispatch(StartAudioCall(id));
+              handleClose();
+            }}
+          >
             <Phone style={{ color: theme.palette.primary.main }} />
           </IconButton>
 
-          <IconButton>
+          <IconButton
+            onClick={() => {
+              dispatch(StartVideoCall(id));
+              handleClose();
+            }}
+          >
             <VideoCamera style={{ color: theme.palette.primary.main }} />
           </IconButton>
         </Stack>
