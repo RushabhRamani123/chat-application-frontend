@@ -40,10 +40,14 @@ const FriendsList = () => {
   useEffect(() => {
     dispatch(FetchFriends());
   }, []);
-
+  const filteredFriends = friends.filter((friend, index, self) => {
+    return index === self.findIndex(t => t._id === friend._id);
+  });
+  
+  console.log(filteredFriends);
   return (
     <>
-      {friends?.map((el, idx) => {
+      {filteredFriends?.map((el, idx) => {
         return <FriendElement key={idx} {...el} />;
       })}
     </>
@@ -58,10 +62,12 @@ const RequestsList = () => {
   useEffect(() => {
     dispatch(FetchFriendRequests());
   }, []);
-
+   const filteredfriendRequests = friendRequests.filter((friend, index, self) => {
+    return index === self.findIndex(t => t._id === friend._id);
+   })
   return (
     <>
-      {friendRequests?.map((el, idx) => {
+      {filteredfriendRequests?.map((el, idx) => {
         return <FriendRequestElement key={idx} {...el.sender} id={el._id} />;
       })}
     </>

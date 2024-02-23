@@ -36,7 +36,7 @@ const ProfileMenu = () => {
         aria-haspopup="true"
         aria-expanded={openMenu ? "true" : undefined}
         alt={user_name}
-        // src={user_img}
+        // src={faker.image.avatar()}  
         onClick={handleClick}
       />
       <Menu

@@ -33,18 +33,25 @@ const user = window.localStorage.getItem("user");
 const user_id = JSON.parse(user);
 // alert(user_id);
 const Chats = () => {
+
   const theme = useTheme();
   const isDesktop = useResponsive("up", "md");
-
+  // const [search, setSearch] = useState("");
   const dispatch = useDispatch();
 
   const {conversations} = useSelector((state) => state.conversation.direct_chat);
-  // alert(JSON.stringify(conversations));
+  const [search, setSearch] = useState('');
+  const [filteredData, setFilteredData] = useState(conversations);
+  const handleSearchChange = (e) => {
+    const searchValue = e.target.value;
+    const filteredData = conversations.filter((el) => el.name.toLowerCase().includes(searchValue.toLowerCase()));
+    setSearch(searchValue);
+    setFilteredData(filteredData);
+  };
   console.log(conversations);
   useEffect(() => {
     socket.emit("get_direct_conversations", { user_id }, (data) => {
-      console.log(data); // this data is the list of conversations
-      // dispatch action
+      console.log(data);
       dispatch(FetchDirectConversations({ conversations: data }));
     });
   }, []);
@@ -108,6 +115,7 @@ const Chats = () => {
               <StyledInputBase
                 placeholder="Search…"
                 inputProps={{ "aria-label": "search" }}
+                onChange={handleSearchChange}
               />
             </Search>
           </Stack>
@@ -132,7 +140,7 @@ const Chats = () => {
                   All Chats
                 </Typography>
                 {/* Chat List */}
-                {conversations?.filter((el) => !el.pinned).map((el, idx) => {
+                {filteredData?.filter((el) => !el.pinned).map((el, idx) => {
                   return <ChatElement {...el} />;
                 })}
               </Stack>
