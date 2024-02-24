@@ -3,7 +3,6 @@ import React, { useEffect, useRef } from "react";
 import { useTheme } from "@mui/material/styles";
 import { ChatHeader, ChatFooter } from "../../components/Chat";
 import useResponsive from "../../hooks/useResponsive";
-import { Chat_History } from "../../data";
 import {
   DocMsg,
   LinkMsg,
@@ -11,7 +10,6 @@ import {
   ReplyMsg,
   TextMsg,
   Timeline,
-  
 } from "../../sections/Dashboard/Conversation";
 import { useDispatch, useSelector } from "react-redux";
 import {

@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "../../utils/axios";
 // import S3 from "../../utils/s3";
-import {v4} from 'uuid';
+import { v4 } from "uuid";
 import S3 from "../../utils/s3";
 // import { S3_BUCKET_NAME } from "../../config";
 // ----------------------------------------------------------------------
@@ -26,6 +26,7 @@ const initialState = {
   chat_type: null,
   room_id: null,
   call_logs: [],
+  reply: null,
 };
 
 const slice = createSlice({
@@ -84,6 +85,9 @@ const slice = createSlice({
       state.chat_type = "group";
       state.room_id = action.payload.room_id;
     },
+    getReply(state, action) {
+      state.reply = action.payload.message;
+    },
   },
 });
 export default slice.reducer;
@@ -131,7 +135,6 @@ export function FetchUsers() {
             "Content-Type": "application/json",
             Authorization: `Bearer ${getState().auth.token}`,
           },
-          
         }
       )
       .then((response) => {
@@ -168,15 +171,12 @@ export function FetchAllUsers() {
 export function FetchFriends() {
   return async (dispatch, getState) => {
     await axios
-      .get(
-        "/user/get-friends",
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${getState().auth.token}`,
-          },
-        }
-      )
+      .get("/user/get-friends", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().auth.token}`,
+        },
+      })
       .then((response) => {
         console.log(response);
         dispatch(slice.actions.updateFriends({ friends: response.data.data }));
@@ -226,7 +226,9 @@ export const FetchCallLogs = () => {
       })
       .then((response) => {
         console.log(response);
-        dispatch(slice.actions.fetchCallLogs({ call_logs: response.data.data }));
+        dispatch(
+          slice.actions.fetchCallLogs({ call_logs: response.data.data })
+        );
       })
       .catch((err) => {
         console.log(err);
@@ -244,7 +246,10 @@ export const FetchUserProfile = () => {
       })
       .then((response) => {
         console.log(response);
-        window.localStorage.setItem("user", JSON.stringify(response.data.data._id));
+        window.localStorage.setItem(
+          "user",
+          JSON.stringify(response.data.data._id)
+        );
         dispatch(slice.actions.fetchUser({ user: response.data.data }));
       })
       .catch((err) => {
@@ -265,9 +270,9 @@ export const UpdateUserProfile = (formValues) => {
     //     async (_err, presignedURL) => {
     //       await fetch(presignedURL, {
     //         method: "PUT",
-  
+
     //         body: file,
-  
+
     //         headers: {
     //           "Content-Type": file.type,
     //         },
@@ -279,9 +284,8 @@ export const UpdateUserProfile = (formValues) => {
     //   console.log(error);
     // }
 
-    
-
-    axios.patch(
+    axios
+      .patch(
         "/user/update-me",
         { ...formValues, avatar: key },
         {
@@ -303,5 +307,11 @@ export const UpdateUserProfile = (formValues) => {
 export const SelectGroup = ({ room_id }) => {
   return async (dispatch) => {
     dispatch(slice.actions.selectGroup({ room_id }));
+  };
+};
+export const GetReply = ({ message }) => {
+  alert(message);
+  return async (dispatch) => {
+    dispatch(slice.actions.getReply({ message }));
   };
 };

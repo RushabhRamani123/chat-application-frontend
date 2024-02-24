@@ -12,12 +12,13 @@ import { useState, useEffect } from "react";
 import { useTheme, alpha } from "@mui/material/styles";
 import { DotsThreeVertical, DownloadSimple, Image } from "phosphor-react";
 import { Message_options } from "../../data";
-import { Link } from "react-router-dom";
-import truncateString from "../../utils/truncate";
 import Embed from "react-embed";
-const MessageOption = () => {
+import { useDispatch } from "react-redux";
+import { GetReply } from "../../redux/slices/app";
+const MessageOption = (message) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+  const dispatch = useDispatch();
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -45,7 +46,13 @@ const MessageOption = () => {
       >
         <Stack spacing={1} px={1}>
           {Message_options.map((el) => (
-            <MenuItem onClick={handleClose}>{el.title}</MenuItem>
+            <MenuItem onClick={(e) => {
+              if(el.title === "Reply"){
+                console.log(message);
+                dispatch(GetReply(message));
+              }
+              handleClose();
+            }}>{el.title}</MenuItem>
           ))}
         </Stack>
       </Menu>
@@ -77,7 +84,7 @@ const TextMsg = ({ el, menu }) => {
           {el.message}
         </Typography>
       </Box>
-      {menu && <MessageOption />}
+      {menu && <MessageOption message={el.message} />}
     </Stack>
   );
 };

@@ -6,6 +6,7 @@ import {
   Stack,
   TextField,
   Tooltip,
+  Typography,
 } from "@mui/material";
 import {
   Camera,
@@ -17,8 +18,9 @@ import {
   Sticker,
   User,
 } from "phosphor-react";
+import CloseIcon from '@mui/icons-material/Close';
 import { useTheme, styled } from "@mui/material/styles";
-import React,{ useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import useResponsive from "../../hooks/useResponsive";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
@@ -71,9 +73,10 @@ const ChatInput = ({
   setValue,
   value,
   inputRef,
+  handleKeyPress,
 }) => {
   const [openActions, setOpenActions] = useState(false);
-  
+
   return (
     <StyledInput
       inputRef={inputRef}
@@ -137,11 +140,12 @@ const ChatInput = ({
             </InputAdornment>
           </Stack>
         ),
-        
       }}
+      onKeyDown={handleKeyPress}
     />
   );
 };
+
 
 function linkify(text) {
   const urlRegex = /(https?:\/\/[^\s]+)/g;
@@ -157,11 +161,21 @@ function containsUrl(text) {
 }
 
 const Footer = () => {
+  const [isReply, setIsReply] = useState(false);
+  const reply = useSelector((state) => state.app.reply);
   const theme = useTheme();
-
+  const message = useSelector((state) => state.app.reply);
+  console.log(message);
+  useEffect(() => {
+   setIsReply(true)
+  },[message])
   const type = useSelector((state) => state.app.chat_type);
-  const {current_conversation} = useSelector((state) => type === "group" ? state.conversation.group_chat : state.conversation.direct_chat);
-  
+  const { current_conversation } = useSelector((state) =>
+    type === "group"
+      ? state.conversation.group_chat
+      : state.conversation.direct_chat
+  );
+
   const user = window.localStorage.getItem("user");
   const user_id = JSON.parse(user);
   const isMobile = useResponsive("between", "md", "xs", "sm");
@@ -213,14 +227,46 @@ const Footer = () => {
       <Box
         p={isMobile ? 1 : 2}
         width={"100%"}
+        // height={"100px"}
         sx={{
           backgroundColor:
             theme.palette.mode === "light"
               ? "#F8FAFF"
               : theme.palette.background,
           boxShadow: "0px 0px 2px rgba(0, 0, 0, 0.25)",
+          
         }}
+        display={"flex"}
+        flexDirection={"column"}
+        gap={2}
       >
+         {isReply ?
+          <Stack 
+            style={{
+              display: "flex",
+              flexDirection: "row",
+            }}  
+          
+          >
+            <Stack
+            height={"50px"}
+              width={"100%"}
+              sx={{
+                backgroundColor:
+          theme.palette.mode === "light"
+            ? "#ECEFF5"
+            :"#3C4752",
+                borderRadius: "10px",
+                // alignItems: "center",
+                justifyContent: "center",
+                padding: "10px",
+              }}
+            >
+              <Typography>{reply}</Typography>
+            </Stack>
+
+            </Stack>
+          : null}
         <Stack direction="row" alignItems={"center"} spacing={isMobile ? 1 : 3}>
           <Stack sx={{ width: "100%" }}>
             <Box
@@ -240,15 +286,20 @@ const Footer = () => {
                 }}
               />
             </Box>
+
             {/* Chat Input */}
+            <Stack>
+            
             <ChatInput
-  inputRef={inputRef}
-  value={value}
-  setValue={setValue}
-  openPicker={openPicker}
-  setOpenPicker={setOpenPicker}
-  handleKeyPress={handleKeyPress} 
-/>
+              inputRef={inputRef}
+              value={value}
+              setValue={setValue}
+              openPicker={openPicker}
+              setOpenPicker={setOpenPicker}
+              handleKeyPress={handleKeyPress}
+              
+            />
+            </Stack>
           </Stack>
           <Box
             sx={{
@@ -263,36 +314,46 @@ const Footer = () => {
               alignItems={"center"}
               justifyContent="center"
             >
-              <IconButton
-                onClick={() =>
-                {
-                 if (type !== "group") {
-                   socket.emit("text_message", {
-                     message: linkify(value),
-                     conversation_id: room_id,
-                     from: user_id,
-                     to: current_conversation.user_id,
-                     type: containsUrl(value) ? "Link" : "Text",
-                   });
-                   setValue("");
+           <IconButton
+                onClick={(e) => {
+              
+    if ( type !== "group" && reply.lenght == 0) {
+      e.preventDefault();
+      socket.emit("text_message", {
+        message: linkify(value),
+        conversation_id: room_id,
+        from: user_id,
+        to: current_conversation.user_id,
+        type: containsUrl(value) ? "Link" : "Text",
+      });
+      setValue("");
+    } else if (type === "group" && reply.lenght == 0) {
+      e.preventDefault();
+      socket.emit("group_text_message", {
+        message: linkify(value),
+        conversation_id: room_id,
+        from: user_id,
+        to: current_conversation.participants,
+        type: containsUrl(value) ? "Link" : "Text",
+      });
+      setValue("");
                   }
                   else {
-                    socket.emit("group_text_message", {
-                      message: linkify(value),
+                    socket.emit("text_message", {
+                      message: reply ,
+                      reply: linkify(value),
                       conversation_id: room_id,
                       from: user_id,
-                      to: current_conversation.participants,
-                      type: containsUrl(value) ? "Link" : "Text",
-                    })
-                    setValue("")
+                      to: current_conversation.user_id,
+                      type: "reply",
+                    });
+      setValue("");
+      setIsReply(false)
                   }
-                }
-                  
-                 }
-                 
-              >
-                <PaperPlaneTilt color="#ffffff" />
-              </IconButton>
+  }}
+>
+  <PaperPlaneTilt color="#ffffff" />
+</IconButton>
             </Stack>
           </Box>
         </Stack>

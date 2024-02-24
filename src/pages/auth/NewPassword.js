@@ -16,9 +16,6 @@ const NewPassword = () => {
           Please set your new password.
         </Typography>
       </Stack>
-
-      {/* NewPasswordForm */}
-
       <NewPasswordForm />
 
       <Link

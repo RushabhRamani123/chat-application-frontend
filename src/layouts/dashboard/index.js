@@ -95,6 +95,7 @@ const DashboardLayout = () => {
             type: "msg",
             subtype: message.type,
             message: message.text,
+            reply:message.reply,
             incoming: message.to === user_id,
             outgoing: message.from === user_id,
           })

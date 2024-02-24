@@ -6,15 +6,29 @@ const user = window.localStorage.getItem("user");
 const user_id = JSON.parse(user);
 function getDayOrTime(dateString) {
   const date = new Date(dateString);
-  const now = new Date();
-  const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-
-  if (date < oneWeekAgo) {
-    // return the day
-    return date.toLocaleDateString("en-US", { weekday: "long" });
-  } else {
-    // return the time
+  const oneWeekAgo = new Date();
+  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+  oneWeekAgo.setHours(12, 0, 0, 0);
+  const oneDayAgo = new Date();
+  oneDayAgo.setDate(oneDayAgo.getDate() - 1);
+  oneDayAgo.setHours(12, 0, 0, 0);
+  const today = new Date();
+  today.setHours(12, 0, 0, 0);
+  if (date > oneWeekAgo && oneDayAgo > date )
+  {   
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    return days[date.getDay()];
+  }
+  else if (oneDayAgo < date && date < today)
+  {
+    return "yesterday";
+  }
+  else if (today < date)
+  { 
     return date.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
+  }
+  else {
+    return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
   }
 }
 
