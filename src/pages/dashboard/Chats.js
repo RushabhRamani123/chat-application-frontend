@@ -102,9 +102,9 @@ const Chats = () => {
               >
                 <Users />
               </IconButton>
-              <IconButton sx={{ width: "max-content" }}>
+              {/* <IconButton sx={{ width: "max-content" }}>
                 <CircleDashed />
-              </IconButton>
+              </IconButton> */}
             </Stack>
           </Stack>
           <Stack sx={{ width: "100%" }}>

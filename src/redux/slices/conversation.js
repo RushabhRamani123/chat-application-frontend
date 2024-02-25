@@ -65,8 +65,9 @@ const slice = createSlice({
           name: `${user?.firstName} ${user?.lastName}`,
           online: user?.status === "Online",
           img: faker.image.avatar(),
-          msg: el.messages[el.messages.length - 1]?.text, 
-          time:getDayOrTime(el.messages[el.messages.length - 1].created_at),
+          msg: el.messages[el.messages.length - 1]?.text,
+          reply: el.messages[el.messages.length - 1]?.reply,
+          time:getDayOrTime(el.messages[el.messages.length - 1]?.created_at),
           unread: 0,
           pinned: false,
           about: user?.about,
@@ -130,6 +131,7 @@ const slice = createSlice({
         type: "msg",
         subtype: el.type,
         message: el.text,
+        reply:el.reply,
         incoming: el.to === user_id,
         outgoing: el.from === user_id,
       }));
@@ -165,6 +167,7 @@ const slice = createSlice({
         type: "msg",
         subtype: el.type,
         message: el.text,
+        reply:el.reply,
         incoming: !(el.from === user_id),
         outgoing: el.from === user_id,
       }));

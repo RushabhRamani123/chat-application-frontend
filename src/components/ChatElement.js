@@ -56,7 +56,7 @@ const ChatElement = ({ img, name, msg, time, unread, online, id }) => {
   const { room_id } = useSelector((state) => state.app);
   const selectedChatId = room_id?.toString();
 
-  let isSelected = +selectedChatId === id;
+  let isSelected = (selectedChatId === id);
 
   if (!selectedChatId) {
     isSelected = false;
@@ -67,6 +67,7 @@ const ChatElement = ({ img, name, msg, time, unread, online, id }) => {
   return (
     <StyledChatBox
       onClick={() => {
+        // alert(id);
         const current = conversations.find((el) => el?.id === id);
         dispatch(SelectConversation({ room_id: id }));
         socket.emit("get_messages", { conversation_id: id }, (data) => {

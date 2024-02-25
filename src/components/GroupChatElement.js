@@ -57,7 +57,7 @@ const GroupChatElement  = ({ participants, name , id }) => {
   const { room_id } = useSelector((state) => state.app);
   const selectedChatId = room_id?.toString();
 
-  let isSelected = +selectedChatId === id;
+  let isSelected = (selectedChatId === id);
 
   if (!selectedChatId) {
     isSelected = false;

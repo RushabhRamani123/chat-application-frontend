@@ -88,6 +88,9 @@ const slice = createSlice({
     getReply(state, action) {
       state.reply = action.payload.message;
     },
+    deleteReply(state) {
+      state.reply = null;
+    }
   },
 });
 export default slice.reducer;
@@ -310,8 +313,13 @@ export const SelectGroup = ({ room_id }) => {
   };
 };
 export const GetReply = ({ message }) => {
-  alert(message);
+  // alert(message);
   return async (dispatch) => {
     dispatch(slice.actions.getReply({ message }));
+  };
+};
+export const DeleteReply = () => {
+  return async (dispatch) => {
+    dispatch(slice.actions.deleteReply());
   };
 };

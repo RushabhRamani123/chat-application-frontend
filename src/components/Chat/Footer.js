@@ -18,7 +18,8 @@ import {
   Sticker,
   User,
 } from "phosphor-react";
-import CloseIcon from '@mui/icons-material/Close';
+import {motion} from "framer-motion";  
+import CloseIcon from "@mui/icons-material/Close";
 import { useTheme, styled } from "@mui/material/styles";
 import React, { useEffect, useRef, useState } from "react";
 import useResponsive from "../../hooks/useResponsive";
@@ -26,7 +27,8 @@ import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import { socket } from "../../socket";
 import { useSelector } from "react-redux";
-
+import { DeleteReply } from "../../redux/slices/app";
+import { useDispatch } from "react-redux";
 const StyledInput = styled(TextField)(({ theme }) => ({
   "& .MuiInputBase-input": {
     paddingTop: "12px !important",
@@ -146,7 +148,6 @@ const ChatInput = ({
   );
 };
 
-
 function linkify(text) {
   const urlRegex = /(https?:\/\/[^\s]+)/g;
   return text.replace(
@@ -161,14 +162,17 @@ function containsUrl(text) {
 }
 
 const Footer = () => {
+  const dispatch = useDispatch();
   const [isReply, setIsReply] = useState(false);
   const reply = useSelector((state) => state.app.reply);
   const theme = useTheme();
   const message = useSelector((state) => state.app.reply);
   console.log(message);
   useEffect(() => {
-   setIsReply(true)
-  },[message])
+    if (message) {
+      setIsReply(true);
+    }
+  }, [message]);
   const type = useSelector((state) => state.app.chat_type);
   const { current_conversation } = useSelector((state) =>
     type === "group"
@@ -186,17 +190,42 @@ const Footer = () => {
 
   const [value, setValue] = useState("");
   const inputRef = useRef(null);
+  
   function handleKeyPress(event) {
     if (event.key === "Enter") {
       event.preventDefault();
-      socket.emit("text_message", {
-        message: linkify(value),
-        conversation_id: room_id,
-        from: user_id,
-        to: current_conversation.user_id,
-        type: containsUrl(value) ? "Link" : "Text",
-      });
-      setValue("");
+      if (type !== "group" && reply === null) {
+        alert("Please enter a message");
+        socket.emit("text_message", {
+          message: linkify(value),
+          conversation_id: room_id,
+          from: user_id,
+          to: current_conversation.user_id,
+          type: containsUrl(value) ? "Link" : "Text",
+        });
+        setValue("");
+      } else if (type === "group" && reply === null) {
+        socket.emit("group_text_message", {
+          message: linkify(value),
+          conversation_id: room_id,
+          from: user_id,
+          to: current_conversation.participants,
+          type: containsUrl(value) ? "Link" : "Text",
+        });
+        setValue("");
+      } else {
+        socket.emit("text_message", {
+          message: reply,
+          reply: linkify(value),
+          conversation_id: room_id,
+          from: user_id,
+          to: current_conversation.user_id,
+          type: "reply",
+        });
+        setValue("");
+        setIsReply(false);
+        dispatch(DeleteReply());
+      }
     }
   }
   function handleEmojiClick(emoji) {
@@ -234,39 +263,69 @@ const Footer = () => {
               ? "#F8FAFF"
               : theme.palette.background,
           boxShadow: "0px 0px 2px rgba(0, 0, 0, 0.25)",
-          
         }}
         display={"flex"}
         flexDirection={"column"}
         gap={2}
       >
-         {isReply ?
-          <Stack 
+        {isReply ? (
+          <Stack
             style={{
               display: "flex",
               flexDirection: "row",
-            }}  
-          
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: "45px",
+            }}
           >
-            <Stack
-            height={"50px"}
-              width={"100%"}
-              sx={{
-                backgroundColor:
-          theme.palette.mode === "light"
-            ? "#ECEFF5"
-            :"#3C4752",
+            <motion.div
+              
+              animate={{
+                y: 0,
+                opacity: 1,
+              }}
+              initial={{
+                y: 10,
+                opacity: 0,
+              }}
+              exit={{
+                y: 10,
+                opacity: 0,
+              }}
+              transition={{ duration: 0.8 }}
+
+              style={{
+                backgroundColor:theme.palette.mode === "light" ? "#ECEFF5" : "#3C4752",
                 borderRadius: "10px",
-                // alignItems: "center",
                 justifyContent: "center",
                 padding: "10px",
+                height: "50px",
+                width: "100%",
               }}
             >
-              <Typography>{reply}</Typography>
-            </Stack>
-
-            </Stack>
-          : null}
+              <motion.p
+                 animate={{
+                  
+                  opacity: 1,
+                }}
+                initial={{ 
+                  opacity: 0,
+                }}
+                // how to handle the animation when the component is removed
+                exit={{
+                  opacity: 0,
+                }}
+                transition={{ duration: 0.5 }}
+              >{reply}</motion.p>
+            </motion.div>
+            <CloseIcon
+              onClick={() => {
+                setIsReply(false);
+                dispatch(DeleteReply());
+              }}
+            />
+          </Stack>
+        ) : null}
         <Stack direction="row" alignItems={"center"} spacing={isMobile ? 1 : 3}>
           <Stack sx={{ width: "100%" }}>
             <Box
@@ -289,16 +348,14 @@ const Footer = () => {
 
             {/* Chat Input */}
             <Stack>
-            
-            <ChatInput
-              inputRef={inputRef}
-              value={value}
-              setValue={setValue}
-              openPicker={openPicker}
-              setOpenPicker={setOpenPicker}
-              handleKeyPress={handleKeyPress}
-              
-            />
+              <ChatInput
+                inputRef={inputRef}
+                value={value}
+                setValue={setValue}
+                openPicker={openPicker}
+                setOpenPicker={setOpenPicker}
+                handleKeyPress={handleKeyPress}
+              />
             </Stack>
           </Stack>
           <Box
@@ -314,46 +371,62 @@ const Footer = () => {
               alignItems={"center"}
               justifyContent="center"
             >
-           <IconButton
+              <IconButton
                 onClick={(e) => {
-              
-    if ( type !== "group" && reply.lenght == 0) {
-      e.preventDefault();
-      socket.emit("text_message", {
-        message: linkify(value),
-        conversation_id: room_id,
-        from: user_id,
-        to: current_conversation.user_id,
-        type: containsUrl(value) ? "Link" : "Text",
-      });
-      setValue("");
-    } else if (type === "group" && reply.lenght == 0) {
-      e.preventDefault();
-      socket.emit("group_text_message", {
-        message: linkify(value),
-        conversation_id: room_id,
-        from: user_id,
-        to: current_conversation.participants,
-        type: containsUrl(value) ? "Link" : "Text",
-      });
-      setValue("");
+                  if (type !== "group" && reply === null) {
+                    e.preventDefault();
+                    socket.emit("text_message", {
+                      message: linkify(value),
+                      conversation_id: room_id,
+                      from: user_id,
+                      to: current_conversation.user_id,
+                      type: containsUrl(value) ? "Link" : "Text",
+                    });
+                    setValue("");
+                  } else if (type === "group" && reply === null) {
+                    
+                    e.preventDefault();
+                    socket.emit("group_text_message", {
+                      message: linkify(value),
+                      conversation_id: room_id,
+                      from: user_id,
+                      to: current_conversation.participants,
+                      type: containsUrl(value) ? "Link" : "Text",
+                    });
+                    setValue("");
                   }
+                  else if (type === "group" && reply !== null) {
+                    
+                      e.preventDefault();
+                      socket.emit("group_text_message", {
+                        message: linkify(reply),
+                        conversation_id: room_id,
+                        from: user_id,
+                        reply: linkify(value),
+                        to: current_conversation.participants,
+                        type: "reply",
+                      });
+                    setValue("");
+                    setIsReply(false);
+                    dispatch(DeleteReply());
+                    }
                   else {
                     socket.emit("text_message", {
-                      message: reply ,
+                      message: linkify(reply),
                       reply: linkify(value),
                       conversation_id: room_id,
                       from: user_id,
                       to: current_conversation.user_id,
                       type: "reply",
                     });
-      setValue("");
-      setIsReply(false)
+                    setValue("");
+                    setIsReply(false);
+                    dispatch(DeleteReply());
                   }
-  }}
->
-  <PaperPlaneTilt color="#ffffff" />
-</IconButton>
+                }}
+              >
+                <PaperPlaneTilt color="#ffffff" />
+              </IconButton>
             </Stack>
           </Box>
         </Stack>

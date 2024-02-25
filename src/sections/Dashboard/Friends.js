@@ -40,14 +40,12 @@ const FriendsList = () => {
   useEffect(() => {
     dispatch(FetchFriends());
   }, []);
-  const filteredFriends = friends.filter((friend, index, self) => {
-    return index === self.findIndex(t => t._id === friend._id);
-  });
+
   
-  console.log(filteredFriends);
+  
   return (
     <>
-      {filteredFriends?.map((el, idx) => {
+      {friends?.map((el, idx) => {
         return <FriendElement key={idx} {...el} />;
       })}
     </>

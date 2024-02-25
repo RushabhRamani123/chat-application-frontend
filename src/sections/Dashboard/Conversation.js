@@ -12,10 +12,11 @@ import { useState, useEffect } from "react";
 import { useTheme, alpha } from "@mui/material/styles";
 import { DotsThreeVertical, DownloadSimple, Image } from "phosphor-react";
 import { Message_options } from "../../data";
-import Embed from "react-embed";
+import Iframe from 'react-iframe'
 import { useDispatch } from "react-redux";
 import { GetReply } from "../../redux/slices/app";
-const MessageOption = (message) => {
+import StarIcon from '@mui/icons-material/Star';
+const MessageOption  = (message) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const dispatch = useDispatch();
@@ -59,7 +60,6 @@ const MessageOption = (message) => {
     </>
   );
 };
-
 const TextMsg = ({ el, menu }) => {
   const theme = useTheme();
   // how to remove the sidebar using the css 
@@ -75,6 +75,9 @@ const TextMsg = ({ el, menu }) => {
             : theme.palette.primary.main,
           borderRadius: 1.5,
           width: "max-content",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-end",
         }}
       >
         <Typography
@@ -83,6 +86,7 @@ const TextMsg = ({ el, menu }) => {
         >
           {el.message}
         </Typography>
+        {false ? <StarIcon sx={{color:"#F7D800",fontSize:"15px"}}/> : null}
       </Box>
       {menu && <MessageOption message={el.message} />}
     </Stack>
@@ -115,6 +119,7 @@ const MediaMsg = ({ el, menu }) => {
           >
             {el.message}
           </Typography>
+          {false ? <StarIcon sx={{color:"#F7D800",fontSize:"15px"}}/> : null}
         </Stack>
       </Box>
       {menu && <MessageOption />}
@@ -159,6 +164,7 @@ const DocMsg = ({ el, menu }) => {
           >
             {el.message}
           </Typography>
+          {false ? <StarIcon sx={{color:"#F7D800",fontSize:"15px"}}/> : null}
         </Stack>
       </Box>
       {menu && <MessageOption />}
@@ -177,7 +183,7 @@ const LinkMsg = ({ el, menu }) => {
     setUrl(el.message);
 
 
-alert(url);
+// alert(url);
   }, [el.message]);
 
   return (
@@ -205,13 +211,8 @@ alert(url);
             }}
           >
             <Stack direction={"column"} spacing={2}>
-              {url && (
-                <Embed
-                  width="300px"
-                  isDark
-                  url={"https://www.blackbox.ai/"}
-                />
-              )}
+              {url && <><iframe sc={{ __html: el.message }} />
+              </>}
             </Stack>
           </Stack>
           <Typography
@@ -220,6 +221,7 @@ alert(url);
           >
             <div dangerouslySetInnerHTML={{ __html: el.message }}></div>
           </Typography>
+          {false ? <StarIcon sx={{color:"#F7D800",fontSize:"15px"}}/> : null}
         </Stack>
       </Box>
       {menu && <MessageOption />}
