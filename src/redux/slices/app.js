@@ -27,6 +27,7 @@ const initialState = {
   room_id: null,
   call_logs: [],
   reply: null,
+  Tab:false,
 };
 
 const slice = createSlice({
@@ -90,6 +91,13 @@ const slice = createSlice({
     },
     deleteReply(state) {
       state.reply = null;
+    },
+     /*------------------------------------------------ Tab change----------------------------------------------- */
+    switchToChat(state, action) {
+      state.Tab = true;
+    },
+    switchToBar(state, action) {
+      state.Tab = false;
     }
   },
 });
@@ -323,3 +331,14 @@ export const DeleteReply = () => {
     dispatch(slice.actions.deleteReply());
   };
 };
+/*------------------------------------------------ Tab change----------------------------------------------- */
+export const SwitchToChat = () => {
+  return async(dispatch) => {
+    dispatch(slice.actions.switchToChat());
+  }
+}
+export const SwitchToBar = () => {
+  return async(dispatch) => {
+    dispatch(slice.actions.switchToBar());
+  }
+}

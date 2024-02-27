@@ -195,7 +195,7 @@ const Footer = () => {
     if (event.key === "Enter") {
       event.preventDefault();
       if (type !== "group" && reply === null) {
-        alert("Please enter a message");
+        // alert("Please enter a message");
         socket.emit("text_message", {
           message: linkify(value),
           conversation_id: room_id,

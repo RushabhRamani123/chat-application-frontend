@@ -94,7 +94,7 @@ const Contact = () => {
     <Box sx={{
       width: 320, maxHeight: "100vh", 
     }}>
-      <Stack sx={{ height: "100%", overflow: "auto", "&::-webkit-scrollbar": { display: "none" } }}>
+      <Stack sx={{ height: "100%", overflow: "auto",  }}>
         <Box
           sx={{
             boxShadow: "0px 0px 2px rgba(0, 0, 0, 0.25)",
@@ -103,10 +103,11 @@ const Contact = () => {
               theme.palette.mode === "light"
                 ? "#F8FAFF"
                 : theme.palette.background,
+               
           }}
         >
           <Stack
-            sx={{ height: "100%", p: 2 }}
+            sx={{ height: "100%", p: 2}}
             direction="row"
             alignItems={"center"}
             justifyContent="space-between"
@@ -140,7 +141,7 @@ const Contact = () => {
             />
             <Stack spacing={0.5}>
               <Typography variant="article" fontWeight={600}>
-                {faker.name.fullName()}
+                {'Rushabh Ramani'}
               </Typography>
               <Typography variant="body2" fontWeight={500}>
                 {"+91 62543 28 739"}
@@ -210,13 +211,13 @@ const Contact = () => {
               <Typography variant="subtitle2">Starred Messages</Typography>
             </Stack>
 
-            <IconButton
+            {/* <IconButton
               onClick={() => {
                 dispatch(UpdateSidebarType("STARRED"));
               }}
             >
               <CaretRight />
-            </IconButton>
+            </IconButton> */}
           </Stack>
           <Divider />
           <Stack

@@ -2,11 +2,12 @@ import React from "react";
 import { Box, Badge, Stack, Avatar, Typography } from "@mui/material";
 import { styled, useTheme, alpha } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
-import { SelectConversation } from "../redux/slices/app";
+import { SelectConversation ,SwitchToChat} from "../redux/slices/app";
 import { socket } from "../socket";
 import {
   FetchCurrentMessages,
   SetCurrentConversation,
+  
 } from "../redux/slices/conversation";
 import { useEffect } from "react";
 const truncateText = (string, n) => {
@@ -61,13 +62,16 @@ const ChatElement = ({ img, name, msg, time, unread, online, id }) => {
   if (!selectedChatId) {
     isSelected = false;
   }
-
+  const windowWidth = window.innerWidth;
   const theme = useTheme();
 
   return (
     <StyledChatBox
       onClick={() => {
         // alert(id);
+        if (windowWidth < 900) {
+          dispatch(SwitchToChat());
+  }
         const current = conversations.find((el) => el?.id === id);
         dispatch(SelectConversation({ room_id: id }));
         socket.emit("get_messages", { conversation_id: id }, (data) => {

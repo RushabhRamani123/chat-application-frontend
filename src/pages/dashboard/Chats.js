@@ -55,7 +55,7 @@ const Chats = () => {
       dispatch(FetchDirectConversations({ conversations: data }));
     });
   }, []);
-
+ 
   const [openDialog, setOpenDialog] = useState(false);
 
   const handleCloseDialog = () => {
@@ -85,7 +85,7 @@ const Chats = () => {
           <BottomNav />
         )}
 
-        <Stack p={3} spacing={2} sx={{ maxHeight: "100vh" }}>
+        <Stack p={3} spacing={2} sx={{ height: "100vh" }}>
           <Stack
             alignItems={"center"}
             justifyContent="space-between"
@@ -102,9 +102,9 @@ const Chats = () => {
               >
                 <Users />
               </IconButton>
-              {/* <IconButton sx={{ width: "max-content" }}>
+              <IconButton sx={{ width: "max-content" }}>
                 <CircleDashed />
-              </IconButton> */}
+              </IconButton>
             </Stack>
           </Stack>
           <Stack sx={{ width: "100%" }}>
@@ -120,11 +120,11 @@ const Chats = () => {
             </Search>
           </Stack>
           <Stack spacing={1}>
-            {/* <Stack direction={"row"} spacing={1.5} alignItems="center">
+            <Stack direction={"row"} spacing={1.5} alignItems="center">
               <ArchiveBox size={24} />
               <Button variant="text">Archive</Button>
-            </Stack> */}
-            {/* <Divider /> */}
+            </Stack>
+             <Divider />
           </Stack>
           <Stack sx={{ flexGrow: 1, overflow: "scroll",  " &::-webkit-scrollbar": { display: "none"}}}>
             {/* <SimpleBar style={{ height: "10" }} timeout={500} clickOnTrack={false}> */}

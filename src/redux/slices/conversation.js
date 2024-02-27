@@ -179,6 +179,7 @@ const slice = createSlice({
     addGroupDirectMessage(state, action) {
       state.group_chat.current_messages.push(action.payload.message);
     },
+   
   },
 });
 export default slice.reducer;

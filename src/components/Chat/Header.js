@@ -17,9 +17,10 @@ import { CaretDown, MagnifyingGlass, Phone, VideoCamera } from "phosphor-react";
 import useResponsive from "../../hooks/useResponsive";
 import { ToggleSidebar } from "../../redux/slices/app";
 import { useDispatch, useSelector } from "react-redux";
+import {SwitchToBar} from "../../redux/slices/app"
 // import { StartAudioCall } from "../../redux/slices/audioCall";
 // import { StartVideoCall } from "../../redux/slices/videoCall";
-
+import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
     backgroundColor: "#44b700",
@@ -116,10 +117,13 @@ const ChatHeader = () => {
                 }}
                 variant="dot"
               >
+                <Stack sx={{display: "flex",flexDirection: "row",alignItems: "center"}}>
+                  {window.innerWidth < 900 ? <ArrowBackOutlinedIcon onClick={() =>{dispatch(ToggleSidebar()); dispatch(SwitchToBar())}} /> : null}
                 <Avatar
                   alt={current_conversation?.name}
                   src={current_conversation?.img}
                 />
+                </Stack>
               </StyledBadge>
             </Box>
             <Stack spacing={0.2}>
@@ -188,7 +192,7 @@ const ChatHeader = () => {
                 horizontal: "right",
               }}
             >
-              <Box p={1}>
+              {/* <Box p={1}>
                 <Stack spacing={1}>
                   {Conversation_Menu?.map((el) => (
                     <MenuItem onClick={handleCloseConversationMenu}>
@@ -203,7 +207,7 @@ const ChatHeader = () => {
                     </MenuItem>
                   ))}
                 </Stack>
-              </Box>
+              </Box> */}
             </Menu>
           </Stack>
         </Stack>

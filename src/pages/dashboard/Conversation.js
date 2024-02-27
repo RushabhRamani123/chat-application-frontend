@@ -106,8 +106,8 @@ const ChatComponent = () => {
 
   return (
     <Stack
-      height={"100%"}
-      maxHeight={"100vh"}
+      height={"100vh"}
+      // maxHeight={"100vh"}
       width={isMobile ? "100vw" : "auto"}
     >
       {/*  */}
