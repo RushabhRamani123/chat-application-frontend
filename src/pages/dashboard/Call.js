@@ -46,15 +46,17 @@ const Call = () => {
             overflowY: "scroll",
 
             height: "100vh",
-            width: 340,
+            width: window.innerWidth < 900 ? "100%" : 320,
             backgroundColor: (theme) =>
               theme.palette.mode === "light"
                 ? "#F8FAFF"
                 : theme.palette.background,
 
             boxShadow: "0px 0px 2px rgba(0, 0, 0, 0.25)",
+            "&::-webkit-scrollbar": { display: "none" },
           }}
         >
+          {}
           <Stack p={3} spacing={2} sx={{ maxHeight: "100vh" }}>
             <Stack
               alignItems={"center"}
@@ -89,13 +91,20 @@ const Call = () => {
               </IconButton>
             </Stack>
             <Divider />
-            <Stack sx={{ flexGrow: 1, overflow: "scroll", height: "100%" }}>
+            <Stack
+              sx={{
+                flexGrow: 1,
+                overflow: "scroll",
+                height: "100%",
+                "&::-webkit-scrollbar": { display: "none" },
+              }}
+            >
               {/* <SimpleBarStyle timeout={500} clickOnTrack={false}> */}
-                <Stack spacing={2.4}>
-                  {call_logs.map((el, idx) => {
-                    return <CallLogElement key={idx} {...el} />;
-                  })}
-                </Stack>
+              <Stack spacing={2.4}>
+                {call_logs.map((el, idx) => {
+                  return <CallLogElement key={idx} {...el} />;
+                })}
+              </Stack>
               {/* </SimpleBarStyle> */}
             </Stack>
           </Stack>

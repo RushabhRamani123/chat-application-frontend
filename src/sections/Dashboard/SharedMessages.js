@@ -71,6 +71,7 @@ const Media = () => {
             position: "relative",
             flexGrow: 1,
             overflow: "scroll",
+            "&::-webkit-scrollbar": { display: "none" },
           }}
           spacing={3}
           padding={value === 1 ? 1 : 3}

@@ -103,7 +103,9 @@ const ChatInput = ({
                 <Tooltip placement="right" title={el.title}>
                   <Fab
                     onClick={() => {
-                      setOpenActions(!openActions);
+                      // setOpenActions(!openActions);
+                      <input type="file" accept= "image/*" />
+                    
                     }}
                     sx={{
                       position: "absolute",

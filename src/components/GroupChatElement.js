@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Badge, Stack, Avatar, Typography } from "@mui/material";
 import { styled, useTheme, alpha } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
-import { SelectGroup } from "../redux/slices/app";
+import { SelectGroup,SwitchToChatGroup } from "../redux/slices/app";
 import { socket } from "../socket";
 import {
   FetchGroupMessages,
@@ -68,6 +68,9 @@ const GroupChatElement  = ({ participants, name , id }) => {
   return (
     <StyledChatBox
       onClick={() => {
+        if (window.innerWidth < 900) {
+          dispatch(SwitchToChatGroup());
+  }
         const current = conversations.find((el) => el?.id === id);
         // alert(JSON.stringify(current));
         dispatch(SelectGroup({ room_id: id }));

@@ -17,11 +17,12 @@ import { CaretDown, MagnifyingGlass, Phone, VideoCamera } from "phosphor-react";
 import useResponsive from "../../hooks/useResponsive";
 import { ToggleSidebar } from "../../redux/slices/app";
 import { useDispatch, useSelector } from "react-redux";
-import {SwitchToBar} from "../../redux/slices/app"
-// import { StartAudioCall } from "../../redux/slices/audioCall";
-// import { StartVideoCall } from "../../redux/slices/videoCall";
+import {SwitchToBar,SwitchToBarGroup} from "../../redux/slices/app"
+import { StartAudioCall } from "../../redux/slices/audioCall";
+import { StartVideoCall } from "../../redux/slices/videoCall";
 import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
 const StyledBadge = styled(Badge)(({ theme }) => ({
+
   "& .MuiBadge-badge": {
     backgroundColor: "#44b700",
     color: "#44b700",
@@ -66,6 +67,7 @@ const Conversation_Menu = [
 ];
 
 const ChatHeader = () => {
+  const chat_type = useSelector((state) => state.app.chat_type);
   const dispatch = useDispatch();
   const isMobile = useResponsive("between", "md", "xs", "sm");
   const theme = useTheme();
@@ -118,7 +120,13 @@ const ChatHeader = () => {
                 variant="dot"
               >
                 <Stack sx={{display: "flex",flexDirection: "row",alignItems: "center"}}>
-                  {window.innerWidth < 900 ? <ArrowBackOutlinedIcon onClick={() =>{dispatch(ToggleSidebar()); dispatch(SwitchToBar())}} /> : null}
+                  {window.innerWidth < 900 ? <ArrowBackOutlinedIcon onClick={() => {
+                    dispatch(ToggleSidebar());
+                    if(chat_type !== "group")
+                      dispatch(SwitchToBar())
+                    else
+                      dispatch(SwitchToBarGroup())
+                  }} /> : null}
                 <Avatar
                   alt={current_conversation?.name}
                   src={current_conversation?.img}
@@ -139,17 +147,17 @@ const ChatHeader = () => {
             spacing={isMobile ? 1 : 3}
           >
             <IconButton
-              // onClick={() => {
-              // dispatch(StartVideoCall(current_conversation.user_id));
-              // }}
+              onClick={() => {
+              dispatch(StartVideoCall(current_conversation.user_id));
+              }}
             >
               <VideoCamera />
             </IconButton>
             <IconButton
-              // onClick={() => {
+              onClick={() => {
                 
-              //   dispatch(StartAudioCall(current_conversation?.user_id));
-              // }}
+                dispatch(StartAudioCall(current_conversation?.user_id));
+              }}
             >
               <Phone />
             </IconButton>
@@ -192,7 +200,7 @@ const ChatHeader = () => {
                 horizontal: "right",
               }}
             >
-              {/* <Box p={1}>
+              <Box p={1}>
                 <Stack spacing={1}>
                   {Conversation_Menu?.map((el) => (
                     <MenuItem onClick={handleCloseConversationMenu}>
@@ -207,7 +215,7 @@ const ChatHeader = () => {
                     </MenuItem>
                   ))}
                 </Stack>
-              </Box> */}
+              </Box>
             </Menu>
           </Stack>
         </Stack>

@@ -3,16 +3,38 @@ import { useTheme } from "@mui/material/styles";
 import { Box, IconButton, Stack } from "@mui/material";
 import ProfileMenu from "./ProfileMenu";
 import { Nav_Buttons } from "../../data";
-
+import { useNavigate } from "react-router-dom";
 const BottomNav = () => {
   const theme = useTheme();
 
   const [selectedTab, setSelectedTab] = React.useState(0);
 
+ 
+  const navigate = useNavigate();
+
+  const getPath = (index) => {
+    switch (index) {
+      case 0:
+        return "/app#loaded";
+  
+      case 1:
+        return "/group#loaded";
+  
+      case 2:
+        return "/call#loaded";
+  
+      case 3:
+        return "/settings#loaded";
+  
+      default:
+        break;
+    }
+  };
+  
   const handleChangeTab = (index) => {
     setSelectedTab(index);
+    navigate(getPath(index));
   };
-
   return (
     <Box
       sx={{

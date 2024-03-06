@@ -88,7 +88,7 @@ const Friends = ({ open, handleClose }) => {
       keepMounted
       onClose={handleClose}
       aria-describedby="alert-dialog-slide-description"
-      sx={{ p: 4 }}
+      sx={{ p: window.innerWidth <400 ? -4 : 4 }}
     >
       {/* <DialogTitle>{"Friends"}</DialogTitle> */}
       <Stack p={2} sx={{ width: "100%" }}>

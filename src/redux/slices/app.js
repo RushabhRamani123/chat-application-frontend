@@ -27,7 +27,9 @@ const initialState = {
   room_id: null,
   call_logs: [],
   reply: null,
-  Tab:false,
+  Tab: false,
+  Tab_Group: false,
+  Selected_index : 0 , 
 };
 
 const slice = createSlice({
@@ -98,6 +100,18 @@ const slice = createSlice({
     },
     switchToBar(state, action) {
       state.Tab = false;
+    },
+    /*------------------------------------------------ Tab change----------------------------------------------- */
+    switchToChatGroup(state, action) {
+      state.Tab_Group = true;
+    },
+    switchToBarGroup(state, action) {
+      state.Tab_Group = false;
+    },
+
+    selectedIndex(state, action) {
+      // alert(action.payload.index)
+      state.Selected_index = action.payload.index;
     }
   },
 });
@@ -340,5 +354,22 @@ export const SwitchToChat = () => {
 export const SwitchToBar = () => {
   return async(dispatch) => {
     dispatch(slice.actions.switchToBar());
+  }
+}
+/*------------------------------------------------ Tab change----------------------------------------------- */
+export const SwitchToChatGroup = () => {
+  return async(dispatch) => {
+    dispatch(slice.actions.switchToChatGroup());
+  }
+}
+export const SwitchToBarGroup = () => {
+  return async(dispatch) => {
+    dispatch(slice.actions.switchToBarGroup());
+  }
+}
+/* ------------------------------------------------SideBar--------------------------------------------------*/
+export const SelectedIndex = ({ index }) => {
+  return async (dispatch) => {
+    dispatch(slice.actions.selectedIndex({ index }));
   }
 }

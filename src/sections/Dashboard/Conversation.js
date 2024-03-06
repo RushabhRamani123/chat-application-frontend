@@ -12,7 +12,8 @@ import { useState, useEffect } from "react";
 import { useTheme, alpha } from "@mui/material/styles";
 import { DotsThreeVertical, DownloadSimple, Image } from "phosphor-react";
 import { Message_options } from "../../data";
-import Iframe from 'react-iframe'
+// import Iframe from 'react-iframe'
+import { YouTubeEmbed } from 'react-social-media-embed';
 import { useDispatch } from "react-redux";
 import { GetReply } from "../../redux/slices/app";
 import StarIcon from '@mui/icons-material/Star';
@@ -80,6 +81,7 @@ const TextMsg = ({ el, menu }) => {
           alignItems: "flex-end",
         }}
       >
+        {/* <Typography>Rushabh Ramani</Typography> */}
         <Typography
           variant="body2"
           color={el.incoming ? theme.palette.text : "#fff"}
@@ -175,7 +177,7 @@ const DocMsg = ({ el, menu }) => {
 const LinkMsg = ({ el, menu }) => {
   const theme = useTheme();
   const [url, setUrl] = useState('');
-  const htmlString = `<a href="https://www.blackbox.ai/" target="_blank">http://localhost:3001/app?id=65c63c991c1209fb84b6a941&type=individual-chat#loaded</a>`;
+  const htmlString = el.message;
   const parser = new DOMParser();
   const doc = parser.parseFromString(htmlString, 'text/html');
   const url_element = doc.querySelector('a').href;
@@ -201,17 +203,18 @@ const LinkMsg = ({ el, menu }) => {
       >
         <Stack spacing={2}>
           <Stack
-            p={2}
             direction="column"
-            spacing={3}
-            alignItems="start"
+            // spacing={3}
+            alignItems="center"
             sx={{
               backgroundColor: theme.palette.background.paper,
               borderRadius: 1,
             }}
           >
-            <Stack direction={"column"} spacing={2}>
-              {url && <><iframe sc={{ __html: el.message }} />
+            <Stack direction={"column"} >
+              {url && <><div style={{ display: 'flex', justifyContent: 'center' }}>
+  <YouTubeEmbed url={url_element} width='375px' height='200px' />
+</div>
               </>}
             </Stack>
           </Stack>

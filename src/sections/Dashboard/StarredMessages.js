@@ -49,6 +49,7 @@ const StarredMessages = () => {
             position: "relative",
             flexGrow: 1,
             overflow: "scroll",
+            "&::-webkit-scrollbar": { display: "none" },
           }}
           spacing={3}
         >

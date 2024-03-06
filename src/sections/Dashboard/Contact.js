@@ -99,8 +99,8 @@ const Contact = () => {
   }
 
   return (
-    <Box sx={{ width: !isDesktop ? "100vw" : 320, maxHeight: "100vh" }}>
-      <Stack sx={{ height: "100%" }}>
+    <Box sx={{ width: !isDesktop ? "100vw" : 320, maxHeight: "100vh" , }}>
+      <Stack sx={{ height: "100%"  }}>
         <Box
           sx={{
             boxShadow: "0px 0px 2px rgba(0, 0, 0, 0.25)",
@@ -134,6 +134,7 @@ const Contact = () => {
             position: "relative",
             flexGrow: 1,
             overflow: "scroll",
+            "&::-webkit-scrollbar": { display: "none" }
           }}
           p={3}
           spacing={3}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useTheme } from "@mui/material/styles";
 
 import { Box, Divider, IconButton, Stack } from "@mui/material";
@@ -11,7 +11,8 @@ import { Nav_Buttons, Nav_Setting } from "../../data";
 
 import ProfileMenu from "./ProfileMenu";
 import { useNavigate } from "react-router-dom";
-
+import { SelectedIndex } from "../../redux/slices/app"
+import { useDispatch , useSelector } from "react-redux";
 const getPath = (index) => {
   switch (index) {
     case 0:
@@ -35,13 +36,17 @@ const SideBar = () => {
   const theme = useTheme();
 
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const { onToggleMode } = useSettings();
-
-  const [selectedTab, setSelectedTab] = React.useState(0);
+  useEffect(() => {
+    
+  }, [])
+  const {Selected_index } = useSelector((state) => state.app);
+  const [selectedTab, setSelectedTab] = React.useState(Selected_index);
 
   const handleChangeTab = (index) => {
     setSelectedTab(index);
+    dispatch(SelectedIndex({index}))
     navigate(getPath(index));
   };
 

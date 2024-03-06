@@ -19,7 +19,7 @@ import { FetchDirectGroupData} from "../../redux/slices/conversation";
 import { useDispatch } from "react-redux";
 import GroupChatElement from "../../components/GroupChatElement";
 import { socket } from "../../socket";
-// import { useTheme } from "@mui/material/styles";
+import BottomNav from "../../layouts/dashboard/BottomNav";
 const Group_Chat = () => {
   // const theme = useTheme();
   const isDesktop = useResponsive("up", "md");
@@ -29,13 +29,13 @@ const Group_Chat = () => {
   const group = useSelector((state) => state.app.user.group);
   const groups = useSelector((state) => state.app.group);
   useEffect(() => {
-     // replace with the actual user id
-
-socket.emit("get_group", (data) => {
-  console.log(data); // this data is the list of conversations
+  // replace with the actual user id
+  socket.emit("get_group", (data) => {
+  console.log(data);
+  // this data is the list of conversations
   // dispatch action
-  dispatch(FetchDirectGroupData({ conversations: data }));
-});
+    dispatch(FetchDirectGroupData({ conversations: data }));
+  });
     // dispatch(FetchGroupData(group));
   },[group])
   console.log(JSON.stringify(groups));
@@ -55,7 +55,7 @@ socket.emit("get_group", (data) => {
         <Box
           sx={{
             position: "relative",
-            height: "100%",
+            height: "100vh",
             width: isDesktop ? 320 : "100vw",
             backgroundColor:
               theme.palette.mode === "light"
@@ -64,7 +64,11 @@ socket.emit("get_group", (data) => {
   
             boxShadow: "0px 0px 2px rgba(0, 0, 0, 0.25)",
           }}
-        >
+      >
+          {!isDesktop && (
+          // Bottom Nav
+          <BottomNav />
+        )}
           <Stack p={3} spacing={2} sx={{ maxHeight: "100vh" , }}>
             <Stack
               alignItems={"center"}
