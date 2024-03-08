@@ -13,7 +13,7 @@ import {
   SearchIconWrapper,
   StyledInputBase,
 } from "../../components/Search";
-
+import NoChat from "../../assets/Illustration/NoChat";
 import { useTheme } from "@mui/material/styles";
 // import { SimpleBarStyle } from "../../components/Scrollbar";
 import { CallLogElement } from "../../components/CallElement";
@@ -38,7 +38,7 @@ const Call = () => {
   const theme = useTheme();
   return (
     <>
-      <Stack direction="row" sx={{ width: "100%" }}>
+      <Stack direction="row" sx={{ width: "100%"  }}>
         {/* Left */}
 
         <Box
@@ -46,7 +46,7 @@ const Call = () => {
             overflowY: "scroll",
 
             height: "100vh",
-            width: window.innerWidth < 900 ? "100%" : 320,
+            width: window.innerWidth < 900 ? "100%" : "420px",
             backgroundColor: (theme) =>
               theme.palette.mode === "light"
                 ? "#F8FAFF"
@@ -109,6 +109,27 @@ const Call = () => {
             </Stack>
           </Stack>
         </Box>
+        { window.innerWidth<1000? null : <Stack
+                  spacing={2}
+                  sx={{ height: "100%", width: "100%" }}
+                  alignItems="center"
+          justifyContent={"center"}
+          
+                >
+                  <NoChat />
+                  <Typography variant="subtitle2">
+                    Select a conversation or start a{" "}
+                    <Link
+                      style={{
+                        color: theme.palette.primary.main,
+                        textDecoration: "none",
+                      }}
+                      to="/"
+                    >
+                      new one
+                    </Link>
+                  </Typography>
+                </Stack>}
       </Stack>
       {openDialog && (
         <StartCall open={openDialog} handleClose={handleCloseDialog} />

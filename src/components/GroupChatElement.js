@@ -74,10 +74,10 @@ const GroupChatElement  = ({ participants, name , id }) => {
         const current = conversations.find((el) => el?.id === id);
         // alert(JSON.stringify(current));
         dispatch(SelectGroup({ room_id: id }));
-        dispatch(SetGroupCurrentConversation({current}));
         socket.emit("get_group_messages", { conversation_id: id }, (data) => {
           console.log(data, "List of messages");
           dispatch(FetchGroupMessages({ messages: data }));
+          dispatch(SetGroupCurrentConversation({current}));
         });
       }}
       sx={{
