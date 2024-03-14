@@ -210,7 +210,6 @@ const Contact = () => {
               <Star size={21} />
               <Typography variant="subtitle2">Starred Messages</Typography>
             </Stack>
-
             {/* <IconButton
               onClick={() => {
                 dispatch(UpdateSidebarType("STARRED"));

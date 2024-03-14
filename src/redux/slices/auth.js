@@ -79,7 +79,6 @@ export function NewPassword(formValues) {
       });
   };
 }
-
 export function ForgotPassword(formValues) {
   return async (dispatch, getState) => {
     dispatch(slice.actions.updateIsLoading({ isLoading: true, error: false }));
@@ -115,7 +114,6 @@ export function ForgotPassword(formValues) {
       });
   };
 }
-
 export function LoginUser(formValues) {
   return async (dispatch, getState) => {
     // Make API call here
@@ -160,13 +158,11 @@ export function LoginUser(formValues) {
       });
   };
 }
-
 export function LogoutUser() {
   return async (dispatch, getState) => {
     dispatch(slice.actions.signOut());
   };
 }
-
 export function RegisterUser(formValues) {
   return async (dispatch, getState) => {
     dispatch(slice.actions.updateIsLoading({ isLoading: true, error: false }));
@@ -204,11 +200,10 @@ export function RegisterUser(formValues) {
       });
   };
 }
-
 export function VerifyEmail(formValues) {
   return async (dispatch, getState) => {
     dispatch(slice.actions.updateIsLoading({ isLoading: true, error: false }));
-
+    
     await axios
       .post(
         "/auth/verify",

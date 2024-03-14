@@ -7,17 +7,19 @@ import {
   MenuItem,
   IconButton,
   Divider,
+  Modal,
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useTheme, alpha } from "@mui/material/styles";
 import { DotsThreeVertical, DownloadSimple, Image } from "phosphor-react";
-import { Message_options } from "../../data";
+import { Message_options, Chat_Message_options } from "../../data";
 // import Iframe from 'react-iframe'
-import { YouTubeEmbed } from 'react-social-media-embed';
+import { YouTubeEmbed } from "react-social-media-embed";
 import { useDispatch } from "react-redux";
 import { GetReply } from "../../redux/slices/app";
-import StarIcon from '@mui/icons-material/Star';
-const MessageOption  = (message) => {
+import StarIcon from "@mui/icons-material/Star";
+import { socket } from "../../socket";
+const MessageOption = (Detail) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const dispatch = useDispatch();
@@ -48,22 +50,43 @@ const MessageOption  = (message) => {
       >
         <Stack spacing={1} px={1}>
           {Message_options.map((el) => (
-            <MenuItem onClick={(e) => {
-              if(el.title === "Reply"){
-                console.log(message);
-                dispatch(GetReply(message));
-              }
-              handleClose();
-            }}>{el.title}</MenuItem>
+            <MenuItem
+              onClick={(e) => {
+                if (el.title === "Reply") {
+                  console.log(Detail);
+                  dispatch(GetReply(Detail.message));
+                }
+                if (el.title === "Star message") {
+                  // alert("message starred");
+                  console.log(Detail);
+                  socket.emit("starmessage", { Detail });
+                }
+                if (el.title === "Forward message") {
+                  
+                }
+                handleClose();
+              }}
+            >
+              {el.title}
+            </MenuItem>
           ))}
         </Stack>
       </Menu>
     </>
   );
 };
+
 const TextMsg = ({ el, menu }) => {
   const theme = useTheme();
-  // how to remove the sidebar using the css 
+  // how to remove the sidebar using the css
+  const user = window.localStorage.getItem("user");
+  const user_id = JSON.parse(user);
+  let starred = false;
+  el.star?.map((el) => {
+    if (user_id === el) {
+      starred = true;
+    }
+  });
 
   return (
     <Stack direction="row" justifyContent={el.incoming ? "start" : "end"}>
@@ -88,9 +111,10 @@ const TextMsg = ({ el, menu }) => {
         >
           {el.message}
         </Typography>
-        {false ? <StarIcon sx={{color:"#F7D800",fontSize:"15px"}}/> : null}
+        {/* { starred ? <StarIcon sx={{color:"#F7D800",fontSize:"15px"}}/> : null} */}
       </Box>
-      {menu && <MessageOption message={el.message} />}
+      {menu && <MessageOption message={el} />}
+      {/* {true && <Modal open={true}>lkj'lkj'lkj</Modal>} */}
     </Stack>
   );
 };
@@ -121,7 +145,9 @@ const MediaMsg = ({ el, menu }) => {
           >
             {el.message}
           </Typography>
-          {false ? <StarIcon sx={{color:"#F7D800",fontSize:"15px"}}/> : null}
+          {false ? (
+            <StarIcon sx={{ color: "#F7D800", fontSize: "15px" }} />
+          ) : null}
         </Stack>
       </Box>
       {menu && <MessageOption />}
@@ -166,39 +192,39 @@ const DocMsg = ({ el, menu }) => {
           >
             {el.message}
           </Typography>
-          {false ? <StarIcon sx={{color:"#F7D800",fontSize:"15px"}}/> : null}
+          {false ? (
+            <StarIcon sx={{ color: "#F7D800", fontSize: "15px" }} />
+          ) : null}
         </Stack>
       </Box>
       {menu && <MessageOption />}
-      
     </Stack>
   );
 };
 const LinkMsg = ({ el, menu }) => {
   const theme = useTheme();
-  const [url, setUrl] = useState('');
+  const [url, setUrl] = useState("");
   const htmlString = el.message;
   const parser = new DOMParser();
-  const doc = parser.parseFromString(htmlString, 'text/html');
-  const url_element = doc.querySelector('a').href;
+  const doc = parser.parseFromString(htmlString, "text/html");
+  const url_element = doc.querySelector("a").href;
   useEffect(() => {
     setUrl(el.message);
 
-
-// alert(url);
+    // alert(url);
   }, [el.message]);
 
   return (
     <Stack direction="row" justifyContent={el.incoming ? "start" : "end"}>
       <Box
-        px={1.5}
-        py={1.5}
+        px={window.innerWidth < 600 ? 0 : 1.5}
+        py={window.innerWidth < 600 ? 0 : 1.5}
         sx={{
           backgroundColor: el.incoming
             ? alpha(theme.palette.background.default, 1)
             : theme.palette.primary.main,
           borderRadius: 1.5,
-          width: "max-content",
+          width: window.innerWidth < 600 ? "300px" : "max-content",
         }}
       >
         <Stack spacing={2}>
@@ -211,20 +237,35 @@ const LinkMsg = ({ el, menu }) => {
               borderRadius: 1,
             }}
           >
-            <Stack direction={"column"} >
-              {url && <><div style={{ display: 'flex', justifyContent: 'center' }}>
-  <YouTubeEmbed url={url_element} width='375px' height='200px' />
-</div>
-              </>}
+            <Stack direction={"column"}>
+              {url && (
+                <>
+                  <div style={{ display: "flex", justifyContent: "center" }}>
+                    <YouTubeEmbed
+                      url={url_element}
+                      width={window.innerWidth < 600 ? "300px" : "375px"}
+                      style={{
+                        borderRadius: window.innerWidth > 600 ? "5px" : "10px",
+                        outline: "none",
+                      }}
+                      height="200px"
+                    />
+                  </div>
+                </>
+              )}
             </Stack>
           </Stack>
           <Typography
             variant="body2"
             color={el.incoming ? theme.palette.text : "#fff"}
+            px={window.innerWidth < 600 ? 1.5 : 0}
+            py={window.innerWidth < 600 ? 1.5 : 0}
           >
             <div dangerouslySetInnerHTML={{ __html: el.message }}></div>
           </Typography>
-          {false ? <StarIcon sx={{color:"#F7D800",fontSize:"15px"}}/> : null}
+          {false ? (
+            <StarIcon sx={{ color: "#F7D800", fontSize: "15px" }} />
+          ) : null}
         </Stack>
       </Box>
       {menu && <MessageOption />}
@@ -286,5 +327,12 @@ const Timeline = ({ el }) => {
     </Stack>
   );
 };
-
-export { Timeline, MediaMsg, LinkMsg, DocMsg, TextMsg, ReplyMsg };
+export {
+  Timeline,
+  MediaMsg,
+  LinkMsg,
+  DocMsg,
+  TextMsg,
+  ReplyMsg,
+  MessageOption,
+};

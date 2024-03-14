@@ -305,7 +305,14 @@ const Chat_History = [
     outgoing: true,
   },
 ];
-
+const Chat_Message_options = [
+  {
+    title: "Pinned",
+  },
+  {
+    title: "Archive",
+  }
+]
 const Message_options = [
   {
     title: "Reply",
@@ -441,4 +448,5 @@ export {
   Shared_links,
   Shared_docs,
   CallList,
+  Chat_Message_options
 };

@@ -20,7 +20,7 @@ import {
 } from "phosphor-react";
 import {motion} from "framer-motion";  
 import CloseIcon from "@mui/icons-material/Close";
-import { useTheme, styled } from "@mui/material/styles";
+import { styled, useTheme, alpha } from "@mui/material/styles";
 import React, { useEffect, useRef, useState } from "react";
 import useResponsive from "../../hooks/useResponsive";
 import data from "@emoji-mart/data";
@@ -36,6 +36,10 @@ const StyledInput = styled(TextField)(({ theme }) => ({
   },
 }));
 
+const StyledInputBase = styled(TextField)(({ theme }) => ({
+  backgroundColor: alpha(theme.palette.primary.main, 0.1),
+  color: theme.palette.primary.main
+}))
 const Actions = [
   {
     color: "#4da5fe",
@@ -92,21 +96,18 @@ const ChatInput = ({
       InputProps={{
         disableUnderline: true,
         startAdornment: (
-          <Stack sx={{ width: "max-content" }}>
+          
+             <Stack sx={{ width: "max-content" ,}}>
             <Stack
               sx={{
                 position: "relative",
-                display: openActions ? "inline-block" : "none",
+                display: openActions ? "inline-block" : "none",  
               }}
             >
               {Actions?.map((el) => (
                 <Tooltip placement="right" title={el.title}>
                   <Fab
-                    onClick={() => {
-                      // setOpenActions(!openActions);
-                      <input type="file" accept= "image/*" />
                     
-                    }}
                     sx={{
                       position: "absolute",
                       top: -el.y,
@@ -130,6 +131,7 @@ const ChatInput = ({
               </IconButton>
             </InputAdornment>
           </Stack>
+         
         ),
         endAdornment: (
           <Stack sx={{ position: "relative" }}>
@@ -278,6 +280,7 @@ const Footer = () => {
               alignItems: "center",
               justifyContent: "space-between",
               gap: "45px",
+              
             }}
           >
             <motion.div

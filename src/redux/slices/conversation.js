@@ -67,6 +67,7 @@ const slice = createSlice({
           img: faker.image.avatar(),
           msg: el.messages[el.messages.length - 1]?.text,
           reply: el.messages[el.messages.length - 1]?.reply,
+          // star: el.messages[el.messages.length - 1]?.star,
           time:getDayOrTime(el.messages[el.messages.length - 1]?.created_at),
           unread: 0,
           pinned: false,
@@ -128,12 +129,15 @@ const slice = createSlice({
       const messages = action.payload.messages;
       const formatted_messages = messages.map((el) => ({
         id: el._id,
+        to: el.to,
+        from: el.from,
         type: "msg",
         subtype: el.type,
         message: el.text,
-        reply:el.reply,
+        star: el.star,
+        reply: el.reply,
         incoming: el.to === user_id,
-        outgoing: el.from === user_id,
+        outgoing: el.from === user_id 
       }));
       state.direct_chat.current_messages = formatted_messages;
     },

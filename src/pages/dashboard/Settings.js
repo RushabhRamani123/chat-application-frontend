@@ -6,8 +6,9 @@ import {
   IconButton,
   Stack,
   Typography,
+  Link
 } from "@mui/material";
-
+import NoChat from "../../assets/Illustration/NoChat"
 import {
   CaretLeft,
   Bell,
@@ -19,7 +20,8 @@ import {
   Keyboard,
   Info,
 } from "phosphor-react";
-
+import useResponsive from "../../hooks/useResponsive";
+import BottomNav from "../../layouts/dashboard/BottomNav";
 import { useTheme } from "@mui/material/styles";
 import { faker } from "@faker-js/faker";
 import SimpleBar from "simplebar-react";
@@ -29,7 +31,7 @@ import ShortcutDialog from "../../sections/Dashboard/Settings/ShortcutDialog";
 
 const Settings = () => {
   const theme = useTheme();
-
+  const isDesktop = useResponsive("up", "md");
   const [openTheme, setOpenTheme] = useState(false);
 
   const handleOpenTheme = () => {
@@ -109,7 +111,7 @@ const Settings = () => {
             overflowY: "scroll",
 
             height: "100vh",
-            width: 320,
+            width: window.innerWidth < 900 ? "100%" : "420px",
             backgroundColor:
               theme.palette.mode === "light"
                 ? "#F8FAFF"
@@ -119,6 +121,10 @@ const Settings = () => {
             "&::-webkit-scrollbar": { display: "none" },
           }}
         >
+          {/* {!isDesktop && (
+          // Bottom Nav
+          <BottomNav />
+        )} */}
           <SimpleBar
             style={{ height: "100vh" }}
             timeout={500}
@@ -128,7 +134,7 @@ const Settings = () => {
               {/* Header */}
               <Stack direction="row" alignItems={"center"} spacing={3}>
                 <IconButton>
-                  <CaretLeft size={24} color={"#4B4B4B"} />
+                  <Link onClick={() => window.history.back()}><CaretLeft size={24} color={"#4B4B4B"} /></Link>
                 </IconButton>
 
                 <Typography variant="h6">Settings</Typography>
@@ -174,6 +180,27 @@ const Settings = () => {
             </Stack>
           </SimpleBar>
         </Box>
+        { (window.innerWidth<1000)===true? null : <Stack
+                  spacing={2}
+                  sx={{ height: "100%", width: "100%" }}
+                  alignItems="center"
+          justifyContent={"center"}
+          
+                >
+                  <NoChat />
+                  <Typography variant="subtitle2">
+                    Select a conversation or start a{" "}
+                    <Link
+                      style={{
+                        color: theme.palette.primary.main,
+                        textDecoration: "none",
+                      }}
+                      to="/"
+                    >
+                      new one
+                    </Link>
+                  </Typography>
+                </Stack>}
         {/* Right Pane */}
       </Stack>
       {openTheme && (

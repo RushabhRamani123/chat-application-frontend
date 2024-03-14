@@ -16,16 +16,16 @@ import { useDispatch , useSelector } from "react-redux";
 const getPath = (index) => {
   switch (index) {
     case 0:
-      return "/app#loaded";
+      return "/app";
 
     case 1:
-      return "/group#loaded";
+      return "/group";
 
     case 2:
-      return "/call#loaded";
+      return "/call";
 
     case 3:
-      return "/settings#loaded";
+      return "/settings";
 
     default:
       break;
@@ -75,7 +75,7 @@ const SideBar = () => {
               height: 64,
               width: 64,
               borderRadius: 1.5,
-              backgroundColor: theme.palette.primary.main,
+              // backgroundColor: theme.palette.primary.main,
             }}
             p={1}
           >

@@ -78,6 +78,7 @@ const Group_conversation = ({ isMobile, menu }) => {
                   return (
                     // Text Message
                     <TextMsg el={el} menu={menu} />
+                    
                   );
               }
 

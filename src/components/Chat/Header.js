@@ -17,7 +17,7 @@ import { CaretDown, MagnifyingGlass, Phone, VideoCamera } from "phosphor-react";
 import useResponsive from "../../hooks/useResponsive";
 import { ToggleSidebar } from "../../redux/slices/app";
 import { useDispatch, useSelector } from "react-redux";
-import {SwitchToBar,SwitchToBarGroup} from "../../redux/slices/app"
+import {SwitchToBar,SwitchToBarGroup ,SelectConversation} from "../../redux/slices/app"
 import { StartAudioCall } from "../../redux/slices/audioCall";
 import { StartVideoCall } from "../../redux/slices/videoCall";
 import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
@@ -122,8 +122,8 @@ const ChatHeader = () => {
                 <Stack sx={{display: "flex",flexDirection: "row",alignItems: "center"}}>
                   {window.innerWidth < 900 ? <ArrowBackOutlinedIcon onClick={() => {
                     dispatch(ToggleSidebar());
-                    if(chat_type !== "group")
-                      dispatch(SwitchToBar())
+                    if (chat_type !== "group")
+                    { dispatch(SelectConversation({ room_id: null })); dispatch(SwitchToBar()); }
                     else
                       dispatch(SwitchToBarGroup())
                   }} /> : null}

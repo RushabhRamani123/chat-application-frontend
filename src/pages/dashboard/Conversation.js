@@ -18,7 +18,7 @@ import {
 } from "../../redux/slices/conversation";
 import { socket } from "../../socket";
 
-const Conversation = ({ isMobile, menu }) => {
+const Conversation = ({ isMobile, menu , starred }) => {
   const dispatch = useDispatch();
 
   const { conversations, current_messages } = useSelector(

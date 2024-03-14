@@ -14,41 +14,33 @@ import { LoginUser } from "../../redux/slices/auth";
 import { useDispatch, useSelector } from "react-redux";
 
 // ----------------------------------------------------------------------
-
 export default function AuthLoginForm() {
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
-
   const {isLoading} = useSelector((state) => state.auth);
-
   const LoginSchema = Yup.object().shape({
     email: Yup.string()
       .required("Email is required")
       .email("Email must be a valid email address"),
     password: Yup.string().required("Password is required"),
   });
-
   const defaultValues = {
     email: "demo@tawk.com",
     password: "demo1234",
   };
-
   const methods = useForm({
     resolver: yupResolver(LoginSchema),
     defaultValues,
-  });
-
+  })
   const {
     reset,
     setError,
     handleSubmit,
     formState: { errors },
   } = methods;
-
   const onSubmit = async (data) => {
     try {
       console.log(data);
-      // submit data to backend
       dispatch(LoginUser(data));
     } catch (error) {
       console.error(error);
@@ -59,7 +51,6 @@ export default function AuthLoginForm() {
       });
     }
   };
-
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>

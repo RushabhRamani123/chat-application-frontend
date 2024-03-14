@@ -9,14 +9,18 @@ import {
   SetCurrentConversation,
   
 } from "../redux/slices/conversation";
-import { useEffect } from "react";
+import { ChatMessageOption } from "../sections/Dashboard/Conversation";
 const truncateText = (string, n) => {
-  return string?.length > n ? `${string?.slice(0, n)}...` : string;
+  const linkRegex = /<a href="(.*?)".*?>/;
+  const match = linkRegex.exec(string);
+  return match ? `${match[1]?.slice(0, n)}...` : string?.length > n ? `${string?.slice(0, n)}...` : string;
 };
 
 const StyledChatBox = styled(Box)(({ theme }) => ({
   "&:hover": {
     cursor: "pointer",
+    backgroundColor: alpha(theme.palette.primary.main, 0.1),
+    color: theme.palette.primary.main,
   },
 }));
 
@@ -109,7 +113,7 @@ const ChatElement = ({ img, name, msg, time, unread, online, id }) => {
               anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
               variant="dot"
             >
-              <Avatar alt={name} src={img} />
+              <Avatar alt={name}  src={img} />
             </StyledBadge>
           ) : (
             <Avatar alt={name} src={img} />
@@ -129,8 +133,10 @@ const ChatElement = ({ img, name, msg, time, unread, online, id }) => {
             badgeContent={unread}
           />
         </Stack>
+      {/* <ChatMessageOption /> */}
       </Stack>
     </StyledChatBox>
+        
   );
 };
 

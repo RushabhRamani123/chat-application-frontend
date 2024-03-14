@@ -11,6 +11,8 @@ import {
 import { styled, useTheme } from "@mui/material/styles";
 import { Chat } from "phosphor-react";
 import { socket } from "../socket";
+import { useDispatch } from "react-redux";
+import { FetchDirectConversations } from "../redux/slices/conversation";
 
 const user = window.localStorage.getItem("user");
 const user_id = JSON.parse(user);
@@ -171,7 +173,7 @@ const FriendElement = ({
   const theme = useTheme();
 
   const name = `${firstName} ${lastName}`;
-
+  const dispatch = useDispatch();
   return (
     <StyledChatBox
       sx={{
@@ -209,6 +211,7 @@ const FriendElement = ({
           <IconButton
             onClick={() => {
               socket.emit("start_conversation", { to: _id, from: user_id });
+              window.location.reload();
             }}
           >
             <Chat />

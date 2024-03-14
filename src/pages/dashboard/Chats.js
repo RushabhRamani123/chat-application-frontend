@@ -28,10 +28,14 @@ import Friends from "../../sections/Dashboard/Friends";
 import { socket } from "../../socket";
 import { useDispatch, useSelector } from "react-redux";
 import { FetchDirectConversations } from "../../redux/slices/conversation";
-
+import {ChatMessageOption} from "../../sections/Dashboard/Conversation";
 const user = window.localStorage.getItem("user");
 const user_id = JSON.parse(user);
 // alert(user_id);
+const message = [
+  { title: "Pinned" },
+  {title:"Archived"},
+];
 const Chats = () => {
 
   const theme = useTheme();
@@ -55,7 +59,9 @@ const Chats = () => {
       dispatch(FetchDirectConversations({ conversations: data }));
     });
   }, []);
- 
+//  useEffect(() => {
+//    filteredData = conversations; 
+//  },[conversations])
   const [openDialog, setOpenDialog] = useState(false);
 
   const handleCloseDialog = () => {
@@ -141,7 +147,12 @@ const Chats = () => {
                 </Typography>
                 {/* Chat List */}
                 {filteredData?.filter((el) => !el.pinned).map((el, idx) => {
-                  return <ChatElement {...el} />;
+                  return (
+                    <Stack direction={"row"} >
+                      <ChatElement {...el} />
+                      
+                    </Stack>
+                    );
                 })}
               </Stack>
             {/*</SimpleBar>*/}

@@ -15,16 +15,16 @@ const BottomNav = () => {
   const getPath = (index) => {
     switch (index) {
       case 0:
-        return "/app#loaded";
+        return "/app";
   
       case 1:
-        return "/group#loaded";
+        return "/group";
   
       case 2:
-        return "/call#loaded";
+        return "/call";
   
       case 3:
-        return "/settings#loaded";
+        return "/settings";
   
       default:
         break;

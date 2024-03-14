@@ -14,13 +14,14 @@ import {
   StyledInputBase,
 } from "../../components/Search";
 import NoChat from "../../assets/Illustration/NoChat";
+import useResponsive from "../../hooks/useResponsive";
+import BottomNav from "../../layouts/dashboard/BottomNav";
 import { useTheme } from "@mui/material/styles";
 // import { SimpleBarStyle } from "../../components/Scrollbar";
 import { CallLogElement } from "../../components/CallElement";
 import StartCall from "../../sections/Dashboard/StartCall";
 import { useDispatch, useSelector } from "react-redux";
 import { FetchCallLogs } from "../../redux/slices/app";
-
 const Call = () => {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -35,6 +36,7 @@ const Call = () => {
   const handleOpenDialog = () => {
     setOpenDialog(true);
   };
+  const isDesktop = useResponsive("up", "md");
   const theme = useTheme();
   return (
     <>
@@ -56,7 +58,11 @@ const Call = () => {
             "&::-webkit-scrollbar": { display: "none" },
           }}
         >
-          {}
+
+{!isDesktop && (
+          // Bottom Nav
+          <BottomNav />
+        )}
           <Stack p={3} spacing={2} sx={{ maxHeight: "100vh" }}>
             <Stack
               alignItems={"center"}
@@ -109,7 +115,7 @@ const Call = () => {
             </Stack>
           </Stack>
         </Box>
-        { window.innerWidth<1000? null : <Stack
+        { (window.innerWidth<1000)===true? null : <Stack
                   spacing={2}
                   sx={{ height: "100%", width: "100%" }}
                   alignItems="center"
@@ -137,5 +143,4 @@ const Call = () => {
     </>
   );
 };
-
 export default Call;
