@@ -9,6 +9,7 @@ import { LogoutUser } from "../../redux/slices/auth";
 import { socket } from "../../socket";
 import { useNavigate } from "react-router-dom";
 import { AWS_S3_REGION, S3_BUCKET_NAME } from "../../config";
+import NoChat from "../../assets/Illustration/NoChat"
 const ProfileMenu = () => {
   const {user} = useSelector((state) => state.app);
   const navigate = useNavigate();
@@ -21,8 +22,9 @@ const ProfileMenu = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const user_id = useSelector((state) => state.app.user._id); 
+  // const user_id = window.localStorage.getItem("user_id");|
 
-  const user_id = window.localStorage.getItem("user_id");
 
   const user_name = user?.firstName;
   // const user_img = `https://${S3_BUCKET_NAME}.s3.${AWS_S3_REGION}.amazonaws.com/${user?.avatar}`;
@@ -35,7 +37,7 @@ const ProfileMenu = () => {
         aria-haspopup="true"
         aria-expanded={openMenu ? "true" : undefined}
         alt={user_name}
-        // src={faker.image.avatar()}  
+        src={faker.image.avatar()}  
         onClick={handleClick}
       />
       <Menu
@@ -71,7 +73,7 @@ const ProfileMenu = () => {
                     }
                     else {
                       dispatch(LogoutUser());
-                      // socket.emit("end", {user_id});
+                      socket.emit("end", (user_id));
                     }
                   }}
                   sx={{ width: 100 }}
@@ -84,6 +86,7 @@ const ProfileMenu = () => {
                 </Stack>{" "}
               </MenuItem>
             ))}
+          
           </Stack>
         </Box>
       </Menu>

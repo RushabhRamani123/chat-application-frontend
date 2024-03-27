@@ -13,9 +13,7 @@ import { Chat } from "phosphor-react";
 import { socket } from "../socket";
 import { useDispatch } from "react-redux";
 import { FetchDirectConversations } from "../redux/slices/conversation";
-
-const user = window.localStorage.getItem("user");
-const user_id = JSON.parse(user);
+import { useSelector } from "react-redux";
 const StyledChatBox = styled(Box)(({ theme }) => ({
   "&:hover": {
     cursor: "pointer",
@@ -50,6 +48,7 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
   },
 }));
 const UserElement = ({ img, firstName, lastName, online, _id }) => {
+  const user_id = useSelector((state) => state.app.user);
   const theme = useTheme();
 
   const name = `${firstName} ${lastName}`;
@@ -114,7 +113,7 @@ const FriendRequestElement = ({
   const theme = useTheme();
 
   const name = `${firstName} ${lastName}`;
-
+  const {_id} = useSelector((state) => state.app.user);
   return (
     <StyledChatBox
       sx={{
@@ -164,14 +163,13 @@ const FriendRequestElement = ({
 };
 // FriendElement
 const FriendElement = ({
-  img,
+  id,
   firstName,
   lastName,
-  online,
-  _id,
+  online
 }) => {
   const theme = useTheme();
-
+  const user_id = useSelector((state) => state.app.user._id);
   const name = `${firstName} ${lastName}`;
   const dispatch = useDispatch();
   return (
@@ -198,10 +196,10 @@ const FriendElement = ({
               anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
               variant="dot"
             >
-              <Avatar alt={name} src={img} />
+              <Avatar alt={name}  />
             </StyledBadge>
           ) : (
-            <Avatar alt={name} src={img} />
+            <Avatar alt={name}  />
           )}
           <Stack spacing={0.3}>
             <Typography variant="subtitle2">{name}</Typography>
@@ -209,11 +207,13 @@ const FriendElement = ({
         </Stack>
         <Stack direction={"row"} spacing={2} alignItems={"center"}>
           <IconButton
-            onClick={() => {
-              socket.emit("start_conversation", { to: _id, from: user_id });
+            onClick={() => { 
+              socket.emit("start_conversation", { to: id, from: user_id });
               window.location.reload();
-            }}
-          >
+              socket.emit("start_conversation", { to: id, from: user_id });
+              window.location.reload(); 
+            }}>
+            
             <Chat />
           </IconButton>
         </Stack>

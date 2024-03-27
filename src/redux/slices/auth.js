@@ -56,7 +56,7 @@ export function NewPassword(formValues) {
         }
       )
       .then(function (response) {
-        console.log(response);
+        // console.log(response);
         dispatch(
             slice.actions.logIn({
               isLoggedIn: true,
@@ -71,7 +71,7 @@ export function NewPassword(formValues) {
         );
       })
       .catch(function (error) {
-        console.log(error);
+        // console.log(error);
         dispatch(showSnackbar({ severity: "error", message: error.message }));
         dispatch(
           slice.actions.updateIsLoading({ isLoading: false, error: true })
@@ -96,7 +96,7 @@ export function ForgotPassword(formValues) {
         }
       )
       .then(function (response) {
-        console.log(response);
+        // console.log(response);
 
         dispatch(
           showSnackbar({ severity: "success", message: response.data.message })
@@ -106,7 +106,7 @@ export function ForgotPassword(formValues) {
         );
       })
       .catch(function (error) {
-        console.log(error);
+        // console.log(error);
         dispatch(showSnackbar({ severity: "error", message: error.message }));
         dispatch(
           slice.actions.updateIsLoading({ isLoading: false, error: true })
@@ -133,13 +133,13 @@ export function LoginUser(formValues) {
         }
       )
       .then(function (response) {
-        console.log(response.data);
+        // console.log(response.data);
 
         dispatch(
           slice.actions.logIn({
             isLoggedIn: true,
             token: response.data.token,
-          //  user: response.data.user,
+           user: response.data.user,
           })
         );
         dispatch(
@@ -150,7 +150,7 @@ export function LoginUser(formValues) {
         );
       })
       .catch(function (error) {
-        console.log(error);
+        // console.log(error);
         dispatch(showSnackbar({ severity: "error", message: error.message }));
         dispatch(
           slice.actions.updateIsLoading({ isLoading: false, error: true })
@@ -174,7 +174,7 @@ export function RegisterUser(formValues) {
         }
       )
       .then(function (response) {
-        console.log(response);
+        // console.log(response);
         dispatch(
           slice.actions.updateRegisterEmail({ email: formValues.email })
         );
@@ -187,7 +187,7 @@ export function RegisterUser(formValues) {
         );
       })
       .catch(function (error) {
-        console.log(error);
+        // console.log(error);
         dispatch(showSnackbar({ severity: "error", message: error.message }));
         dispatch(
           slice.actions.updateIsLoading({ error: true, isLoading: false })
@@ -217,9 +217,8 @@ export function VerifyEmail(formValues) {
         }
       )
       .then(function (response) {
-        console.log(response);
+        // console.log(response);
         dispatch(slice.actions.updateRegisterEmail({ email: "" }));
-
         dispatch(
           slice.actions.logIn({
             isLoggedIn: true,
@@ -235,7 +234,7 @@ export function VerifyEmail(formValues) {
         );
       })
       .catch(function (error) {
-        console.log(error);
+        // console.log(error);
         dispatch(showSnackbar({ severity: "error", message: error.message }));
         dispatch(
           slice.actions.updateIsLoading({ error: true, isLoading: false })

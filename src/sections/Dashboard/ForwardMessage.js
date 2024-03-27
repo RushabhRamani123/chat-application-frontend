@@ -17,8 +17,7 @@ const ForwardMessage = ({open, handleClose}) => {
     onClose={ handleClose  }
     aria-describedby="alert-dialog-slide-description"
     sx={{ p: window.innerWidth <400 ? -4 : 4 }}
-  >
-            Rushabh Ramani
+  >Rushabh Ramani
             <button >Click</button>
   </Dialog>
   )

@@ -16,19 +16,19 @@ import {
 } from "../../sections/Dashboard/Conversation";
 import { useSelector } from "react-redux";
 import {
-  FetchCurrentMessages,
-  SetCurrentConversation,
-} from "../../redux/slices/conversation";
+    FetchGroupMessages,
+    SetGroupCurrentConversation
+  } from "../../redux/slices/conversation";
 import { socket } from "../../socket";
-const StarredMessages = () => {
+const StarredMessages_Group = () => {
   const dispatch = useDispatch();
   const theme = useTheme();
   const app = useSelector((state) => state.app);
-  const user_id = app.user._id;
+  const user_id = app.user?._id;
   const isDesktop = useResponsive("up", "md");
-  const { conversations, current_messages } = useSelector(
-    (state) => state.conversation.direct_chat
-  );
+  const { conversations, current_messages } = useSelector((state) => state.conversation.group_chat);
+  console.log(conversations); 
+  console.log(current_messages); 
   const { room_id } = useSelector((state) => state.app);
   const starredMessages = [];
   current_messages?.forEach((message) => {
@@ -38,13 +38,15 @@ const StarredMessages = () => {
       }
     });
   });
+  // alert('hello brother'); 
+  console.log("This is the starred message:"+starredMessages);
   useEffect(() => {
     const current = conversations.find((el) => el?.id === room_id);
-    socket.emit("get_messages", { conversation_id: current?.id }, (data) => {
-      console.log("from the starred message");  
-      dispatch(FetchCurrentMessages({ messages: data }));
+    socket.emit("get_group_messages", { conversation_id: current?.id }, (data) => {
+      dispatch(FetchGroupMessages({ messages: data }));
+      dispatch(SetGroupCurrentConversation({ current }));
     });
-    dispatch(SetCurrentConversation(current));
+
   }, []);
   return (
     <Box sx={{ width: !isDesktop ? "100vw" : 320, maxHeight: "100vh" }}>
@@ -72,7 +74,7 @@ const StarredMessages = () => {
             >
               <ArrowLeft />
             </IconButton>
-            <Typography variant="subtitle2">Starred Messages</Typography>
+            <Typography variant="subtitle2">Starred Messages</Typography> 
           </Stack>
         </Box>
         <Stack
@@ -128,6 +130,7 @@ const StarredMessages = () => {
                         <TextMsg el={el} />
                       );
                   }
+
                 default:
                   return <></>;
               }
@@ -138,5 +141,4 @@ const StarredMessages = () => {
     </Box>
   );
 };
-
-export default StarredMessages;
+export default StarredMessages_Group;

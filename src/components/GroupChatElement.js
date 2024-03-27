@@ -48,11 +48,11 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
   },
 }));
 
-const GroupChatElement  = ({ participants, name , id }) => {
+const GroupChatElement  = ({ participants, name ,unread, id ,msg,img,time}) => {
   const { conversations } = useSelector(
     (state) => state.conversation.group_chat
   );
-  console.log(conversations, "conversations");
+  // console.log(conversations, "conversations");
   const dispatch = useDispatch();
   const { room_id } = useSelector((state) => state.app);
   const selectedChatId = room_id?.toString();
@@ -67,17 +67,12 @@ const GroupChatElement  = ({ participants, name , id }) => {
 
   return (
     <StyledChatBox
-      onClick={() => {
-        if (window.innerWidth < 900) {
-          dispatch(SwitchToChatGroup());
-  }
+      onClick={() => {if(window.innerWidth < 900){dispatch(SwitchToChatGroup());}
         const current = conversations.find((el) => el?.id === id);
-        // alert(JSON.stringify(current));
-        dispatch(SelectGroup({ room_id: id }));
-        socket.emit("get_group_messages", { conversation_id: id }, (data) => {
-          console.log(data, "List of messages");
+          dispatch(SelectGroup({ room_id: id }));
+          socket.emit("get_group_messages", { conversation_id: id }, (data) => {
           dispatch(FetchGroupMessages({ messages: data }));
-          dispatch(SetGroupCurrentConversation({current}));
+          dispatch(SetGroupCurrentConversation({ current }));
         });
       }}
       sx={{
@@ -99,21 +94,24 @@ const GroupChatElement  = ({ participants, name , id }) => {
         justifyContent="space-between"
       >
         <Stack direction="row" spacing={2}>
-            <Avatar alt={""} src={""} />
+            <Avatar alt={""} src={img} />
           <Stack spacing={0.3}>
             <Typography variant="subtitle2">{name}</Typography>
-            {/* <Typography variant="caption">{""}</Typography> */}
+            <Typography variant="caption">{truncateText(msg, 20)}</Typography>
           </Stack>
         </Stack>
-        <Stack spacing={2} alignItems={"center"}>
-          {/* <Typography sx={{ fontWeight: 600 }} variant="caption">
-            {""}
-          </Typography> */}
-          {/* <Badge
+        <Stack spacing={0.5} alignItems="flex-end">
+          <Typography sx={{ fontWeight: 600 }} variant="caption">
+            {time}
+          </Typography>
+          <Typography sx={{ backgroundColor:theme.palette.primary.main , color:'white' , padding:'3px 5px' ,borderRadius:'50%',fontSize:'8px'}} variant="caption">
+        {3} 
+          </Typography>
+          <Badge
             className="unread-count"
             color="primary"
-            badgeContent=""
-          /> */}
+            badgeContent={unread}
+          />
         </Stack>
       </Stack>
     </StyledChatBox>

@@ -5,7 +5,16 @@ import { v4 } from "uuid";
 import S3 from "../../utils/s3";
 // import { S3_BUCKET_NAME } from "../../config";
 // ----------------------------------------------------------------------
-
+const user = window.localStorage.getItem("user");
+const user_id = JSON.parse(user);
+const blocked = (data) => {
+  let value = false; 
+  data.map((el) => {
+    if (el === user_id)
+    {
+value = true; }return el; });
+  return value; 
+}
 const initialState = {
   user: {},
   sideBar: {
@@ -23,6 +32,7 @@ const initialState = {
   all_users: [],
   friends: [], // all friends
   friendRequests: [], // all friend requests
+  forward:false,
   chat_type: null,
   room_id: null,
   call_logs: [],
@@ -55,13 +65,13 @@ const slice = createSlice({
       state.tab = action.payload.tab;
     },
     openSnackBar(state, action) {
-      console.log(action.payload);
+      // console.log(action.payload);
       state.snackbar.open = true;
       state.snackbar.severity = action.payload.severity;
       state.snackbar.message = action.payload.message;
     },
     closeSnackBar(state) {
-      console.log("This is getting executed");
+      // console.log("This is getting executed");
       state.snackbar.open = false;
       state.snackbar.message = null;
     },
@@ -72,12 +82,26 @@ const slice = createSlice({
       state.all_users = action.payload.users;
     },
     updateFriends(state, action) {
-      state.friends = action.payload.friends;
+      // console.log(action.payload.friends); 
+      const list = action.payload.friends.map((el) => {
+        // console.log("fdf" + JSON.stringify(el));
+        
+        return {
+          id:el._id,
+          firstName: `${el.firstName}`,
+          lastName: `${el.lastName}`,
+          blocked: el.blocked,
+          isblock: blocked(el.blocked)
+        };
+      });
+      // console.log((list));
+      state.friends = list ; 
     },
     updateFriendRequests(state, action) {
       state.friendRequests = action.payload.requests;
     },
     selectConversation(state, action) {
+      console.log(action.payload.room_id)
       state.chat_type = "individual";
       state.room_id = action.payload.room_id;
     },
@@ -101,17 +125,26 @@ const slice = createSlice({
     switchToBar(state, action) {
       state.Tab = false;
     },
-    /*------------------------------------------------ Tab change----------------------------------------------- */
+      /*------------------------------------------------ Tab change----------------------------------------------- */
     switchToChatGroup(state, action) {
       state.Tab_Group = true;
     },
     switchToBarGroup(state, action) {
       state.Tab_Group = false;
     },
-
     selectedIndex(state, action) {
       // alert(action.payload.index)
       state.Selected_index = action.payload.index;
+    },
+    forwardMessage(state) {
+      if (state.forward)
+      {
+        state.forward = false; 
+      }  
+      else
+      {
+        state.forward = true; 
+        }
     }
   },
 });
@@ -163,11 +196,11 @@ export function FetchUsers() {
         }
       )
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         dispatch(slice.actions.updateUsers({ users: response.data }));
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
   };
 }
@@ -185,11 +218,11 @@ export function FetchAllUsers() {
         }
       )
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         dispatch(slice.actions.updateAllUsers({ users: response.data.data }));
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
   };
 }
@@ -203,11 +236,11 @@ export function FetchFriends() {
         },
       })
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         dispatch(slice.actions.updateFriends({ friends: response.data.data }));
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
   };
 }
@@ -225,13 +258,13 @@ export function FetchFriendRequests() {
         }
       )
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         dispatch(
           slice.actions.updateFriendRequests({ requests: response.data.data })
         );
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
   };
 }
@@ -250,13 +283,13 @@ export const FetchCallLogs = () => {
         },
       })
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         dispatch(
           slice.actions.fetchCallLogs({ call_logs: response.data.data })
         );
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
   };
 };
@@ -270,7 +303,7 @@ export const FetchUserProfile = () => {
         },
       })
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         window.localStorage.setItem(
           "user",
           JSON.stringify(response.data.data._id)
@@ -278,7 +311,7 @@ export const FetchUserProfile = () => {
         dispatch(slice.actions.fetchUser({ user: response.data.data }));
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
   };
 };
@@ -321,11 +354,11 @@ export const UpdateUserProfile = (formValues) => {
         }
       )
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         dispatch(slice.actions.updateUser({ user: response.data.data }));
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
   };
 };
@@ -371,5 +404,10 @@ export const SwitchToBarGroup = () => {
 export const SelectedIndex = ({ index }) => {
   return async (dispatch) => {
     dispatch(slice.actions.selectedIndex({ index }));
+  }
+}
+export const ForwardMessage = () => {
+  return async (dispatch) => {
+    dispatch(slice.actions.forwardMessage());
   }
 }

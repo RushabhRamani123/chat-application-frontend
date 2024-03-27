@@ -64,7 +64,7 @@ const CreateGroupForm = ({ handleClose }) => {
   const onSubmit = async (data) => {
     try {
       //  API Call
-      console.log("DATA", data);
+      // console.log("DATA", data);
     } catch (error) {
       console.error(error);
     }

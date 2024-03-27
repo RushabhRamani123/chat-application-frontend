@@ -25,7 +25,7 @@ export default function TextAnimate({ text, variants, sx, ...other }) {
       }}
       {...other}
     >
-      {text.split('').map((letter, index) => (
+      {text.split('')?.map((letter, index) => (
         <m.span key={index} variants={variants || varFade().inUp}>
           {letter}
         </m.span>

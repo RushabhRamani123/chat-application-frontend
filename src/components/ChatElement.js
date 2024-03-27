@@ -2,14 +2,11 @@ import React from "react";
 import { Box, Badge, Stack, Avatar, Typography } from "@mui/material";
 import { styled, useTheme, alpha } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
-import { SelectConversation ,SwitchToChat} from "../redux/slices/app";
+import { SelectConversation ,SwitchToChat,ToggleSidebar} from "../redux/slices/app";
 import { socket } from "../socket";
-import {
-  FetchCurrentMessages,
-  SetCurrentConversation,
-  
-} from "../redux/slices/conversation";
-import { ChatMessageOption } from "../sections/Dashboard/Conversation";
+import {FetchCurrentMessages,SetCurrentConversation} from "../redux/slices/conversation";
+import { FetchFriends } from "../redux/slices/app"
+import Checkbox from '@mui/material/Checkbox';
 const truncateText = (string, n) => {
   const linkRegex = /<a href="(.*?)".*?>/;
   const match = linkRegex.exec(string);
@@ -54,9 +51,9 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 }));
 
 const ChatElement = ({ img, name, msg, time, unread, online, id }) => {
-  const { conversations } = useSelector(
-    (state) => state.conversation.direct_chat
-  );
+  const { conversations } = useSelector((state) => state.conversation.direct_chat);
+  const forward = useSelector((state) => state.app.forward); 
+  const open = useSelector((state) => state.app.sideBar.open);
   const dispatch = useDispatch();
   const { room_id } = useSelector((state) => state.app);
   const selectedChatId = room_id?.toString();
@@ -68,21 +65,34 @@ const ChatElement = ({ img, name, msg, time, unread, online, id }) => {
   }
   const windowWidth = window.innerWidth;
   const theme = useTheme();
-
+  
   return (
+    <>
+    {forward ? <Checkbox/> : null } 
     <StyledChatBox
       onClick={() => {
-        // alert(id);
         if (windowWidth < 900) {
           dispatch(SwitchToChat());
-  }
-        const current = conversations.find((el) => el?.id === id);
-        dispatch(SelectConversation({ room_id: id }));
+        }
+        if (open)
+        {
+          dispatch(ToggleSidebar());
+        }
         socket.emit("get_messages", { conversation_id: id }, (data) => {
-          // data => list of messages
-          console.log(data, "List of messages");
-          dispatch(FetchCurrentMessages({ messages: data }));
-          dispatch(SetCurrentConversation(current));
+          if (data === null)
+          {
+            dispatch(SelectConversation({ room_id: id }));
+            const current = conversations.find((el) => el?.id === id);
+            dispatch(SetCurrentConversation(current));
+            dispatch(FetchCurrentMessages({ messages: ''}));
+          }
+          else {
+            dispatch(SelectConversation({ room_id: id }));
+            dispatch(FetchFriends());
+            dispatch(FetchCurrentMessages({ messages: data }));
+            const current = conversations.find((el) => el?.id === id);
+            dispatch(SetCurrentConversation(current));
+        }
         });
       }}
       sx={{
@@ -102,8 +112,10 @@ const ChatElement = ({ img, name, msg, time, unread, online, id }) => {
     >
       <Stack
         direction="row"
-        alignItems={"center"}
+        
         justifyContent="space-between"
+
+        alignItems="flex-start"
       >
         <Stack direction="row" spacing={2}>
           {" "}
@@ -116,16 +128,19 @@ const ChatElement = ({ img, name, msg, time, unread, online, id }) => {
               <Avatar alt={name}  src={img} />
             </StyledBadge>
           ) : (
-            <Avatar alt={name} src={img} />
+            <Avatar alt={name} src />
           )}
           <Stack spacing={0.3}>
             <Typography variant="subtitle2">{name}</Typography>
             <Typography variant="caption">{truncateText(msg, 20)}</Typography>
           </Stack>
         </Stack>
-        <Stack spacing={2} alignItems={"center"}>
+        <Stack spacing={0.5} alignItems="flex-end">
           <Typography sx={{ fontWeight: 600 }} variant="caption">
             {time}
+          </Typography>
+          <Typography sx={{ backgroundColor:theme.palette.primary.main , color:'white' , padding:'3px 5px' ,borderRadius:'50%',fontSize:'8px'}} variant="caption">
+        {3} 
           </Typography>
           <Badge
             className="unread-count"
@@ -133,10 +148,10 @@ const ChatElement = ({ img, name, msg, time, unread, online, id }) => {
             badgeContent={unread}
           />
         </Stack>
-      {/* <ChatMessageOption /> */}
       </Stack>
     </StyledChatBox>
-        
+
+    </>        
   );
 };
 

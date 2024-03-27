@@ -28,14 +28,17 @@ const Nav_Buttons = [
   {
     index: 0,
     icon: <ChatCircleDots />,
+    name:"Chats"
   },
   {
     index: 1,
     icon: <Users />,
+    name:"Groups"
   },
   {
     index: 2,
     icon: <Phone />,
+    name:"Call"
   },
 ];
 

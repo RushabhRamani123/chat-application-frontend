@@ -1,36 +1,60 @@
-import React from "react";
-import { Box, Stack, Divider, Button } from "@mui/material";
-import AntSwitch from "./AntSwitch";
+import React, { useState } from "react";
 import { useTheme } from "@mui/material/styles";
-import { IconButton } from "@mui/material";
-import Typography from "@mui/material/Typography";
 import {
-  Bell,
-  CaretRight,
-  Phone,
-  Prohibit,
-  Star,
-  Trash,
-  VideoCamera,
-  X,
-} from "phosphor-react";
-import { useDispatch } from "react-redux";
-import { ToggleSidebar, UpdateSidebarType } from "../redux/slices/app";
-import { Avatar } from "@mui/material";
-import { faker } from "@faker-js/faker";
-import {
+  Avatar,
+  Box,
+  Button,
+  Divider,
+  IconButton,
+  Stack,
+  Typography,
+  Slide,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Slide,
 } from "@mui/material";
-import { useState } from "react";
+import { faker } from "@faker-js/faker";
+import {
+  Bell,
+  CaretRight,
+  Prohibit,
+  Star,
+  Trash,
+  X,
+} from "phosphor-react";
+import useResponsive from "../../hooks/useResponsive";
+import AntSwitch from "../../components/AntSwitch";
+import { useDispatch, useSelector } from "react-redux";
+import { FetchFriends, ToggleSidebar, UpdateSidebarType } from "../../redux/slices/app";
+import { socket } from "../../socket"
+import { useEffect } from "react";
+
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
-const BlockDialog = ({ open, handleClose }) => {
+
+const BlockDialog = ({ open, handleClose, handleBlocked, block }) => {
+  const dispatch = useDispatch(); 
+  const { user_id } = useSelector((state) => state.conversation.direct_chat.current_conversation);
+  const { user_id_user} = useSelector((state)=>state.app.user._id)
+  const handleBlock = (e) => {
+    if (block === 'Block') {
+      let id_array = []
+      id_array.push(user_id); 
+      id_array.push(user_id_user);  
+      socket.emit("Account_Block", (id_array));
+        dispatch(FetchFriends())
+      handleBlocked("Unblock");
+    }
+    else {
+      socket.emit("Account_Unblock", (user_id));
+      dispatch(FetchFriends())
+      handleBlocked("Block");
+    }
+    handleClose();
+  };
   return (
     <Dialog
       open={open}
@@ -39,20 +63,27 @@ const BlockDialog = ({ open, handleClose }) => {
       onClose={handleClose}
       aria-describedby="alert-dialog-slide-description"
     >
-      <DialogTitle>Block this contact</DialogTitle>
+      <DialogTitle>{block} this contact</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-slide-description">
-          Are you sure you want to block this Contact?
+          {block === "Block"
+            ? "Are you sure you want to block this Contact?"
+            : "Do you want to Unblock this Contact?"}
         </DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
-        <Button onClick={handleClose}>Yes</Button>
+        <Button
+          onClick={() => {
+            handleBlock();
+          }}
+        >
+          Yes
+        </Button>
       </DialogActions>
     </Dialog>
   );
 };
-
 const DeleteChatDialog = ({ open, handleClose }) => {
   return (
     <Dialog
@@ -75,26 +106,53 @@ const DeleteChatDialog = ({ open, handleClose }) => {
     </Dialog>
   );
 };
+const Contact_Group = () => {
 
-const Contact = () => {
+  const dispatch = useDispatch();
+  const details = useSelector((state) => state.conversation);
+  const { current_conversation } = details.group_chat;
+  const theme = useTheme();
+  const [block, setBlock] = useState("Block");
+  const isDesktop = useResponsive("up", "md");
+  const data = useSelector((state) => state.app.friends);
   const [openBlock, setOpenBlock] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
-
+  useEffect(() => {
+    data.map((el) => {
+      if (el.id === current_conversation?.user_id)
+      {
+        if (el.isblock)
+        {
+          setBlock("Unblock");
+        }  
+      }
+      return el; 
+    })
+  }, [data])
   const handleCloseBlock = () => {
     setOpenBlock(false);
   };
   const handleCloseDelete = () => {
     setOpenDelete(false);
   };
-
-  const dispatch = useDispatch();
-  const theme = useTheme();
-
+  const handleBlocked = (value) => {
+    setBlock(value);
+  };
+  const data_user = current_conversation?.participants; 
+  const userComponents = data_user?.map((el) => (
+    <React.Fragment key={`${el.firstName}-${el.lastName}`}>
+      <Stack direction="row" alignItems="center" spacing={2}>
+        <Avatar src={faker.image.imageUrl()} alt={faker.name.fullName()} />
+        <Stack direction="column" spacing={0.5}>
+          <Typography variant="subtitle2">{`${el.firstName} ${el.lastName}`}</Typography>
+          <Typography variant="caption">{el?.about}</Typography>
+        </Stack>
+      </Stack>
+    </React.Fragment>
+  ));
   return (
-    <Box sx={{
-      width: 320, maxHeight: "100vh", 
-    }}>
-      <Stack sx={{ height: "100%", overflow: "auto",  }}>
+    <Box sx={{ width: !isDesktop ? "100vw" : 320, maxHeight: "100vh" }}>
+      <Stack sx={{ height: "100%" }}>
         <Box
           sx={{
             boxShadow: "0px 0px 2px rgba(0, 0, 0, 0.25)",
@@ -103,11 +161,10 @@ const Contact = () => {
               theme.palette.mode === "light"
                 ? "#F8FAFF"
                 : theme.palette.background,
-               
           }}
         >
           <Stack
-            sx={{ height: "100%", p: 2}}
+            sx={{ height: "100%", p: 2 }}
             direction="row"
             alignItems={"center"}
             justifyContent="space-between"
@@ -115,9 +172,7 @@ const Contact = () => {
           >
             <Typography variant="subtitle2">Contact Info</Typography>
             <IconButton
-              onClick={() => {
-                dispatch(ToggleSidebar());
-              }}
+              onClick={() => { dispatch(ToggleSidebar())}}
             >
               <X />
             </IconButton>
@@ -129,55 +184,24 @@ const Contact = () => {
             position: "relative",
             flexGrow: 1,
             overflow: "scroll",
+            "&::-webkit-scrollbar": { display: "none" },
           }}
           p={3}
           spacing={3}
         >
-          <Stack alignItems="center" direction="row" spacing={2}>
+          <Stack alignItems="center" direction="column" spacing={2}>
             <Avatar
-              src={faker.image.avatar()}
+              src={current_conversation?.img}
               alt={faker.name.firstName()}
-              sx={{ height: 64, width: 64 }}
+              sx={{ height: 120, width: 120 }}
             />
             <Stack spacing={0.5}>
               <Typography variant="article" fontWeight={600}>
-                {'Rushabh Ramani'}
-              </Typography>
-              <Typography variant="body2" fontWeight={500}>
-                {"+91 62543 28 739"}
+                {current_conversation?.name}
               </Typography>
             </Stack>
           </Stack>
-          <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent={"space-evenly"}
-          >
-            <Stack alignItems={"center"} spacing={1}>
-              <IconButton>
-                <Phone />
-              </IconButton>
-
-              <Typography variant="overline">Voice</Typography>
-            </Stack>
-            <Stack alignItems={"center"} spacing={1}>
-              <IconButton>
-                <VideoCamera />
-              </IconButton>
-
-              <Typography variant="overline">Video</Typography>
-            </Stack>
-          </Stack>
-          <Divider />
-          <Stack spacing={0.5}>
-            <Typography variant="article" fontWeight={600}>
-              About
-            </Typography>
-            <Typography variant="body2" fontWeight={500}>
-              {"Imagination is the only limit"}
-            </Typography>
-          </Stack>
-          <Divider />
+         <Divider/>
           <Stack
             direction="row"
             alignItems="center"
@@ -194,8 +218,8 @@ const Contact = () => {
             </Button>
           </Stack>
           <Stack direction={"row"} alignItems="center" spacing={2}>
-            {[1, 2, 3].map((el,index) => (
-              <Box key={index}>
+            {[1, 2, 3].map((el) => (
+              <Box>
                 <img src={faker.image.city()} alt={faker.internet.userName()} />
               </Box>
             ))}
@@ -210,13 +234,14 @@ const Contact = () => {
               <Star size={21} />
               <Typography variant="subtitle2">Starred Messages</Typography>
             </Stack>
-            {/* <IconButton
+
+            <IconButton
               onClick={() => {
                 dispatch(UpdateSidebarType("STARRED"));
               }}
             >
               <CaretRight />
-            </IconButton> */}
+            </IconButton>
           </Stack>
           <Divider />
           <Stack
@@ -231,16 +256,8 @@ const Contact = () => {
             <AntSwitch />
           </Stack>
           <Divider />
-          <Typography variant="body2">1 group in common</Typography>
-          <Stack direction="row" alignItems={"center"} spacing={2}>
-            <Avatar src={faker.image.imageUrl()} alt={faker.name.fullName()} />
-            <Stack direction="column" spacing={0.5}>
-              <Typography variant="subtitle2">Camel’s Gang</Typography>
-              <Typography variant="caption">
-                Owl, Parrot, Rabbit , You
-              </Typography>
-            </Stack>
-          </Stack>
+          <Typography variant="body2">Group Members</Typography>
+          {userComponents}
           <Divider />
           <Stack direction="row" alignItems={"center"} spacing={2}>
             <Button
@@ -250,13 +267,26 @@ const Contact = () => {
               fullWidth
               startIcon={<Prohibit />}
               variant="outlined"
+              sx={{
+                "&:hover": {
+                  backgroundColor:
+                    block === "Block"
+                      ? theme.palette.mode === "light"
+                        ? "#FFEFEF"
+                        : "#281E25"
+                      : null,
+                  border: block === "Block" ? "1px solid red" : null,
+                },
+
+                color: block === "Unblock" ? "" : "red",
+                border: block === "Unblock" ? "" : "1px solid red",
+              }}
             >
-              Block
+              {block}
             </Button>
             <Button
               onClick={() => {
-                setOpenDelete(true);
-              }}
+                setOpenDelete(true);}}
               fullWidth
               startIcon={<Trash />}
               variant="outlined"
@@ -267,7 +297,12 @@ const Contact = () => {
         </Stack>
       </Stack>
       {openBlock && (
-        <BlockDialog open={openBlock} handleClose={handleCloseBlock} />
+        <BlockDialog
+          open={openBlock}
+          handleClose={handleCloseBlock}
+          handleBlocked={handleBlocked}
+          block = {block}
+        />
       )}
       {openDelete && (
         <DeleteChatDialog open={openDelete} handleClose={handleCloseDelete} />
@@ -275,5 +310,4 @@ const Contact = () => {
     </Box>
   );
 };
-
-export default Contact;
+export default Contact_Group;

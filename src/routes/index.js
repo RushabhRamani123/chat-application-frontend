@@ -42,9 +42,7 @@ export default function Router() {
         { path: "chats", element: <Chats /> },
         { path: "contact", element: <Contact /> },
         { path: "profile", element: <Profile /> },
-
         {path: "call", element: <CallPage />},
-        
         { path: "404", element: <Page404 /> },
         { path: "*", element: <Navigate to="/404" replace /> },
       ],
@@ -78,6 +76,4 @@ const NewPasswordPage = Loadable(
 
 // Settings
 const Settings = Loadable(lazy(() => import("../pages/dashboard/Settings")));
-const Profile = Loadable(
-  lazy(() => import("../pages/dashboard/Settings/Profile"))
-);
+const Profile = Loadable(lazy(() => import("../pages/dashboard/Settings/Profile")));

@@ -10,10 +10,11 @@ import {
   MenuItem,
   Stack,
   styled,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { CaretDown, MagnifyingGlass, Phone, VideoCamera } from "phosphor-react";
+import { CaretDown,Phone, VideoCamera } from "phosphor-react";
 import useResponsive from "../../hooks/useResponsive";
 import { ToggleSidebar } from "../../redux/slices/app";
 import { useDispatch, useSelector } from "react-redux";
@@ -73,9 +74,7 @@ const ChatHeader = () => {
   const theme = useTheme();
   const type = useSelector((state) => state.app.chat_type);
   const {current_conversation} = useSelector((state) => type === "group" ? state.conversation.group_chat : state.conversation.direct_chat);
-
-  const [conversationMenuAnchorEl, setConversationMenuAnchorEl] =
-    React.useState(null);
+  const [conversationMenuAnchorEl, setConversationMenuAnchorEl] = React.useState(null);
   const openConversationMenu = Boolean(conversationMenuAnchorEl);
   const handleClickConversationMenu = (event) => {
     setConversationMenuAnchorEl(event.currentTarget);
@@ -117,13 +116,16 @@ const ChatHeader = () => {
                   vertical: "bottom",
                   horizontal: "right",
                 }}
-                variant="dot"
+                variant={current_conversation?.online && "dot"}
               >
                 <Stack sx={{display: "flex",flexDirection: "row",alignItems: "center"}}>
                   {window.innerWidth < 900 ? <ArrowBackOutlinedIcon onClick={() => {
                     dispatch(ToggleSidebar());
                     if (chat_type !== "group")
-                    { dispatch(SelectConversation({ room_id: null })); dispatch(SwitchToBar()); }
+                    {
+                      dispatch(SelectConversation({ room_id: null }));
+                      dispatch(SwitchToBar());
+                    }
                     else
                       dispatch(SwitchToBarGroup())
                   }} /> : null}
@@ -138,7 +140,7 @@ const ChatHeader = () => {
               <Typography variant="subtitle2">
                 {current_conversation?.name}
               </Typography>
-              <Typography variant="caption">Online</Typography>
+              <Typography variant="caption">{current_conversation?.online ?"Online" : "Offline" }</Typography>
             </Stack>
           </Stack>
           <Stack
@@ -146,26 +148,29 @@ const ChatHeader = () => {
             alignItems="center"
             spacing={isMobile ? 1 : 3}
           >
+            <>
+            <Tooltip title="Videocall" placement="bottom">
             <IconButton
               onClick={() => {
-              dispatch(StartVideoCall(current_conversation.user_id));
+              dispatch(StartVideoCall(current_conversation?.user_id));
               }}
             >
               <VideoCamera />
             </IconButton>
-            <IconButton
+          </Tooltip>
+            </>
+          
+            <>
+              <Tooltip title="Call" placement="bottom">
+              <IconButton
               onClick={() => {
-                
                 dispatch(StartAudioCall(current_conversation?.user_id));
               }}
             >
               <Phone />
             </IconButton>
-            {!isMobile && (
-              <IconButton>
-                <MagnifyingGlass />
-              </IconButton>
-            )}
+            </Tooltip>
+            </>
             <Divider
               orientation="vertical" flexItem />
             <IconButton
@@ -209,9 +214,12 @@ const ChatHeader = () => {
                         direction="row"
                         alignItems={"center"}
                         justifyContent="space-between"
-                      >
-                        <span>{el.title}</span>
-                      </Stack>{" "}
+                        onClick={() => {
+                          if (el.title === 'Contact info'){
+                            dispatch(ToggleSidebar());
+                          }
+                        }}
+                      ><span>{el.title}</span></Stack>{" "}
                     </MenuItem>
                   ))}
                 </Stack>
@@ -220,8 +228,6 @@ const ChatHeader = () => {
           </Stack>
         </Stack>
       </Box>
-
-      
     </>
   );
 };

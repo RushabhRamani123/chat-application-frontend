@@ -11,8 +11,9 @@ import { Nav_Buttons, Nav_Setting } from "../../data";
 
 import ProfileMenu from "./ProfileMenu";
 import { useNavigate } from "react-router-dom";
-import { SelectedIndex } from "../../redux/slices/app"
-import { useDispatch , useSelector } from "react-redux";
+import { SelectedIndex, ToggleSidebar } from "../../redux/slices/app";
+import { useDispatch, useSelector } from "react-redux";
+import Tooltip from "@mui/material/Tooltip";
 const getPath = (index) => {
   switch (index) {
     case 0:
@@ -38,15 +39,13 @@ const SideBar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { onToggleMode } = useSettings();
-  useEffect(() => {
-    
-  }, [])
-  const {Selected_index } = useSelector((state) => state.app);
+  useEffect(() => {}, []);
+  const { Selected_index } = useSelector((state) => state.app);
   const [selectedTab, setSelectedTab] = React.useState(Selected_index);
-
+  const open = useSelector((state) => state.app.sideBar.open);
   const handleChangeTab = (index) => {
     setSelectedTab(index);
-    dispatch(SelectedIndex({index}))
+    dispatch(SelectedIndex({ index }));
     navigate(getPath(index));
   };
 
@@ -89,73 +88,102 @@ const SideBar = () => {
           >
             {Nav_Buttons.map((el) => {
               return el.index === selectedTab ? (
-                <Box
-                  sx={{
-                    backgroundColor: theme.palette.primary.main,
-                    borderRadius: 1.5,
-                  }}
-                  p={1}
-                >
-                  <IconButton
-                    onClick={() => {}}
-                    sx={{ width: "max-content", color: "#ffffff" }}
-                  >
-                    {el.icon}
-                  </IconButton>
-                </Box>
+                <>
+                  <Tooltip title={el.name} placement="right">
+                    <Box
+                      sx={{
+                        backgroundColor: theme.palette.primary.main,
+                        borderRadius: 1.5,
+                      }}
+                      p={1}
+                    >
+                      <IconButton
+                        // ADD THE EVENT HERE
+                        onClick={() => {
+                          if (open) {
+                            dispatch(ToggleSidebar());
+                          }
+                        }}
+                        sx={{ width: "max-content", color: "#ffffff" }}
+                      >
+                        {el.icon}
+                      </IconButton>
+                    </Box>
+                  </Tooltip>
+                </>
               ) : (
-                <IconButton
-                  onClick={() => {
-                    handleChangeTab(el.index);
-                  }}
-                  sx={{
-                    width: "max-content",
-                    color:
-                      theme.palette.mode === "light"
-                        ? "#080707"
-                        : theme.palette.text.primary,
-                  }}
-                >
-                  {el.icon}
-                </IconButton>
+                <>
+                  <Tooltip title={el.name} placement="right">
+                    <IconButton
+                      onClick={() => {
+                        if (open) {
+                          dispatch(ToggleSidebar());
+                        }
+                        handleChangeTab(el.index);
+                      }}
+                      sx={{
+                        width: "max-content",
+                        color:
+                          theme.palette.mode === "light"
+                            ? "#080707"
+                            : theme.palette.text.primary,
+                      }}
+                    >
+                      {el.icon}
+                    </IconButton>
+                  </Tooltip>
+                </>
               );
             })}
             <Divider sx={{ width: 48 }} />
             {Nav_Setting.map((el) => {
               return el.index === selectedTab ? (
-                <Box
-                  sx={{
-                    backgroundColor: theme.palette.primary.main,
-                    borderRadius: 1.5,
-                  }}
-                  p={1}
-                >
-                  <IconButton
-                    onClick={() => {
-                      // dispatch(UpdateTab(el.index));
-                    }}
-                    sx={{ width: "max-content", color: "#ffffff" }}
-                  >
-                    {el.icon}
-                  </IconButton>
-                </Box>
+                <>
+                  <Tooltip title={"Settings"} placement="right">
+                    <Box
+                      sx={{
+                        backgroundColor: theme.palette.primary.main,
+                        borderRadius: 1.5,
+                      }}
+                      p={1}
+                    >
+                      <IconButton
+                        onClick={() => {
+                          if (open) {
+                            dispatch(ToggleSidebar());
+                          }
+                          // dispatch(UpdateTab(el.index));
+                        }}
+                        sx={{ width: "max-content", color: "#ffffff" }}
+                      >
+                        {el.icon}
+                      </IconButton>
+                    </Box>
+                  </Tooltip>
+                </>
               ) : (
-                <IconButton
-                  onClick={() => {
-                    handleChangeTab(el.index);
-
-                    // dispatch(UpdateTab(el.index));
-                  }}
-                  sx={{
-                    width: "max-content",
-                    color:
-                      theme.palette.mode === "light"
-                        ? "#080707"
-                        : theme.palette.text.primary,
-                  }}
-                >
-                  {el.icon}
-                </IconButton>
+                <>
+                  <Tooltip title="Settings" placement="right">
+                    <IconButton
+                      onClick={() => {
+                        handleChangeTab(el.index);
+                        if (open) {
+                          dispatch(ToggleSidebar());
+                        }
+                        // dispatch(UpdateTab(el.index));
+                      }}
+                      sx={{
+                        width: "max-content",
+                        color:
+                          theme.palette.mode === "light"
+                            ? "#080707"
+                            : theme.palette.text.primary,
+                      }}
+                    >
+                      {el.icon}
+                    </IconButton>
+                  </Tooltip>
+                </>
               );
             })}
           </Stack>

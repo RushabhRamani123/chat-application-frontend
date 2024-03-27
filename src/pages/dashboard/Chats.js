@@ -13,8 +13,9 @@ import {
   MagnifyingGlass,
   Users,
 } from "phosphor-react";
-import SimpleBar from 'simplebar-react';
-import 'simplebar-react/dist/simplebar.min.css';
+import Tooltip from "@mui/material/Tooltip";
+import SimpleBar from "simplebar-react";
+import "simplebar-react/dist/simplebar.min.css";
 import { useTheme } from "@mui/material/styles";
 import useResponsive from "../../hooks/useResponsive";
 import BottomNav from "../../layouts/dashboard/BottomNav";
@@ -28,42 +29,35 @@ import Friends from "../../sections/Dashboard/Friends";
 import { socket } from "../../socket";
 import { useDispatch, useSelector } from "react-redux";
 import { FetchDirectConversations } from "../../redux/slices/conversation";
-import {ChatMessageOption} from "../../sections/Dashboard/Conversation";
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
+import { ForwardMessage } from "../../redux/slices/app"; 
 const user = window.localStorage.getItem("user");
 const user_id = JSON.parse(user);
-// alert(user_id);
-const message = [
-  { title: "Pinned" },
-  {title:"Archived"},
-];
+const message = [{ title: "Pinned" }, { title: "Archived" }];
 const Chats = () => {
-
   const theme = useTheme();
   const isDesktop = useResponsive("up", "md");
-  // const [search, setSearch] = useState("");
   const dispatch = useDispatch();
-
-  const {conversations} = useSelector((state) => state.conversation.direct_chat);
-  const [search, setSearch] = useState('');
+  const { conversations } = useSelector((state) => state.conversation.direct_chat);
+  const [search, setSearch] = useState("");
   const [filteredData, setFilteredData] = useState(conversations);
+  const forward = useSelector((state)=>state.app.forward); 
   const handleSearchChange = (e) => {
     const searchValue = e.target.value;
-    const filteredData = conversations.filter((el) => el.name.toLowerCase().includes(searchValue.toLowerCase()));
+
+    const filteredData = conversations?.filter((el) =>
+      el.name.toLowerCase().includes(searchValue.toLowerCase())
+    );
     setSearch(searchValue);
     setFilteredData(filteredData);
   };
-  console.log(conversations);
   useEffect(() => {
     socket.emit("get_direct_conversations", { user_id }, (data) => {
-      console.log(data);
       dispatch(FetchDirectConversations({ conversations: data }));
     });
   }, []);
-//  useEffect(() => {
-//    filteredData = conversations; 
-//  },[conversations])
+  
   const [openDialog, setOpenDialog] = useState(false);
-
   const handleCloseDialog = () => {
     setOpenDialog(false);
   };
@@ -76,41 +70,40 @@ const Chats = () => {
       <Box
         sx={{
           position: "relative",
-          height: "100%",
+          height: "100vh",
           width: isDesktop ? 320 : "100vw",
           backgroundColor:
             theme.palette.mode === "light"
               ? "#F8FAFF"
               : theme.palette.background,
-
           boxShadow: "0px 0px 2px rgba(0, 0, 0, 0.25)",
         }}
       >
         {!isDesktop && (
-          // Bottom Nav
           <BottomNav />
         )}
-
         <Stack p={3} spacing={2} sx={{ height: "100vh" }}>
           <Stack
             alignItems={"center"}
             justifyContent="space-between"
             direction="row"
           >
-            <Typography variant="h5">Chats</Typography>
-
+            <Typography variant="h5">{!forward ? "Chats" : <Stack sx={{ display: 'flex', flexDirection: 'row', gap: '2px', alignItems: 'center' }}>
+              <KeyboardBackspaceIcon onClick={() => {
+                dispatch(ForwardMessage());
+              }} />
+              <Stack>Forward to...</Stack></Stack>}</Typography>
             <Stack direction={"row"} alignItems="center" spacing={1}>
-              <IconButton
-                onClick={() => {
-                  handleOpenDialog();
-                }}
-                sx={{ width: "max-content" }}
-              >
-                <Users />
-              </IconButton>
-              <IconButton sx={{ width: "max-content" }}>
-                <CircleDashed />
-              </IconButton>
+              <Tooltip title="Friends" placement="bottom">
+                <IconButton
+                  onClick={() => {
+                    handleOpenDialog();
+                  }}
+                  sx={{ width: "max-content" }}
+                >
+                  <Users />
+                </IconButton>
+              </Tooltip>
             </Stack>
           </Stack>
           <Stack sx={{ width: "100%" }}>
@@ -126,36 +119,30 @@ const Chats = () => {
             </Search>
           </Stack>
           <Stack spacing={1}>
-            <Stack direction={"row"} spacing={1.5} alignItems="center">
-              <ArchiveBox size={24} />
-              <Button variant="text">Archive</Button>
-            </Stack>
-             <Divider />
           </Stack>
-          <Stack sx={{ flexGrow: 1, overflow: "scroll",  " &::-webkit-scrollbar": { display: "none"}}}>
-            {/* <SimpleBar style={{ height: "10" }} timeout={500} clickOnTrack={false}> */}
-              <Stack spacing={2.4 } sx={{"&::-webkit-scrollbar": { display: "none"}}}>
-                {/* <Typography variant="subtitle2" sx={{ color: "#676667" }}>
-                  Pinned
-                </Typography> */}
-                {/* Chat List */}
-                {/* {ChatList.filter((el) => el.pinned).map((el, idx) => {
-                  return <ChatElement {...el} />;
-                })} */}
-                <Typography variant="subtitle2" sx={{ color: "#676667" }}>
-                  All Chats
-                </Typography>
-                {/* Chat List */}
-                {filteredData?.filter((el) => !el.pinned).map((el, idx) => {
+          <Stack
+            sx={{
+              flexGrow: 1,
+              overflow: "scroll",
+              " &::-webkit-scrollbar": { display: "none" },
+            }}
+          >
+            <Stack
+              spacing={2.4}
+              sx={{ "&::-webkit-scrollbar": { display: "none" } }}
+            >
+              <Typography variant="subtitle2" sx={{ color: "#676667" }}>
+                All Chats
+              </Typography>
+              {filteredData?.filter((el) => !el.pinned)
+                .map((el, idx) => {
                   return (
-                    <Stack direction={"row"} >
+                    <Stack key={idx} direction={"row"}>
                       <ChatElement {...el} />
-                      
                     </Stack>
-                    );
+                  );
                 })}
-              </Stack>
-            {/*</SimpleBar>*/}
+            </Stack>
           </Stack>
         </Stack>
       </Box>

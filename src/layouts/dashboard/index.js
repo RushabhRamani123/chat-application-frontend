@@ -28,13 +28,18 @@ import {
   PushToVideoCallQueue,
   UpdateVideoCallDialog,
 } from "../../redux/slices/videoCall";
-
+function time(date)
+{
+  const date_ = new Date(date); 
+  const value =  date_.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }); 
+  return value; 
+};
 const DashboardLayout = () => {
   const isDesktop = useResponsive("up", "md");
   const dispatch = useDispatch();
  
   const app = useSelector((state) => state.app);
-  console.log(app.user._id);
+  // console.log(app.user._id);
   const user_id = app.user._id;
   const { open_audio_notification_dialog, open_audio_dialog } = useSelector(
     (state) => state.audioCall
@@ -87,16 +92,20 @@ const DashboardLayout = () => {
       socket.on("new_message", (data) => {
         // alert(JSON.stringify(data));
         const message = data.message;
-        console.log(current_conversation, data);
+        const count  = data?.count; 
+        console.log(count); 
+        // console.log(current_conversation, data);
         // check if msg we got is from currently selected conversation
-
+        // dispatch()
+        
         dispatch(
           AddDirectMessage({
             id: message._id,
             type: "msg",
             subtype: message.type,
             message: message.text,
-            reply:message.reply,
+            reply: message.reply,
+            time : time(message.created_at),
             incoming: message.to === user_id,
             outgoing: message.from === user_id,
           })
@@ -104,7 +113,7 @@ const DashboardLayout = () => {
       });
 
       socket.on("start_chat", (data) => {
-        console.log(data);
+        // console.log(data);
         // alert(JSON.stringify(conversations));
         // add / update to conversation list
         const existing_conversation = conversations.find(
@@ -119,7 +128,6 @@ const DashboardLayout = () => {
         }
         dispatch(SelectConversation({ room_id: data._id }));
       });
-
       socket.on("new_friend_request", (data) => {
         dispatch(
           showSnackbar({
@@ -128,7 +136,6 @@ const DashboardLayout = () => {
           })
         );
       });
-
       socket.on("request_accepted", (data) => {
         dispatch(
           showSnackbar({
@@ -137,7 +144,6 @@ const DashboardLayout = () => {
           })
         );
       });
-
       socket.on("request_sent", (data) => {
         dispatch(showSnackbar({ severity: "success", message: data.message }));
       });
@@ -146,7 +152,7 @@ const DashboardLayout = () => {
         // alert(JSON.stringify(current_conversation));
 
         const message = data.message;
-        console.log(current_conversation, data);
+        // console.log(current_conversation, data);
         // check if msg we got is from currently selected conversation
         // if (current_conversation?.id === data.conversation_id) {
         // alert("new message");
@@ -156,11 +162,11 @@ const DashboardLayout = () => {
             type: "msg",
             subtype: message.type,
             message: message.text,
+            time:time(message.created_at),
             incoming: !(message.from === user_id),
             outgoing: message.from === user_id,
           })
         );
-        // }
       });
     }
     return () => {

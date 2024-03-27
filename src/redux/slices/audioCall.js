@@ -68,7 +68,7 @@ export const StartAudioCall = (id) => {
         }
       )
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         dispatch(
           slice.actions.pushToAudioCallQueue({
             call: response.data.data,
@@ -77,7 +77,7 @@ export const StartAudioCall = (id) => {
         );
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
   };
 };

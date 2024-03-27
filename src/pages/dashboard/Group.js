@@ -3,14 +3,14 @@ import { useTheme } from "@mui/material/styles";
 import { Box, Stack, Typography } from "@mui/material";
 
 import { Link, useSearchParams } from "react-router-dom";
-// import Group_ChatComponentfrom "./Conversation"; R 
+// import Group_ChatComponentfrom "./Conversation"; 
 import  Group_Chat  from "./Group_Chat";
 import Group_ChatComponent from "./Group_conversation";
-// import Contact from "../../sections/Dashboard/Contact";
+import Contact_Group from "../../sections/Dashboard/Contact_Group";
 import NoChat from "../../assets/Illustration/NoChat";
 import { useSelector } from "react-redux";
-// import StarredMessages from "../../sections/Dashboard/StarredMessages";
-// import Media from "../../sections/Dashboard/SharedMessages";
+import StarredMessages_Group from "../../sections/Dashboard/StarredMessages_Group";
+import Media from "../../sections/Dashboard/SharedMessages";
 const Group = () => {
   const [searchParams] = useSearchParams();
   const { Tab_Group } = useSelector((state) => state.app)
@@ -92,14 +92,14 @@ const Group = () => {
                )} 
               </>}
         </Box>
-        {/* {sideBar.open &&
+        {sideBar.open &&
           (() => {
             switch (sideBar.type) {
               case "CONTACT":
-                return <Contact />;
+                return <Contact_Group />;
 
               case "STARRED":
-                return <StarredMessages />;
+                return <StarredMessages_Group />;
 
               case "SHARED":
                 return <Media />;
@@ -107,7 +107,7 @@ const Group = () => {
               default:
                 break;
             }
-          })()} */}
+          })()}
       </Stack>
     </>
   );

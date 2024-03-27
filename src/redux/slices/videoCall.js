@@ -68,7 +68,7 @@ export const StartVideoCall = (id) => {
         }
       )
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         dispatch(
           slice.actions.pushToVideoCallQueue({
             call: response.data.data,
@@ -77,7 +77,7 @@ export const StartVideoCall = (id) => {
         );
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
   };
 };

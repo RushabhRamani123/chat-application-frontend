@@ -16,8 +16,8 @@ const UsersList = () => {
   const dispatch = useDispatch();
 
   const { users } = useSelector((state) => state.app);
-  console.log(useSelector((state) => state.app));
-  console.log(JSON.stringify(users.data));
+  // console.log(useSelector((state) => state.app));
+  // console.log(JSON.stringify(users.data));
   const user = users.data;
   useEffect(() => {
     dispatch(FetchUsers());
@@ -60,7 +60,7 @@ const RequestsList = () => {
   useEffect(() => {
     dispatch(FetchFriendRequests());
   }, []);
-   const filteredfriendRequests = friendRequests.filter((friend, index, self) => {
+   const filteredfriendRequests = friendRequests?.filter((friend, index, self) => {
     return index === self.findIndex(t => t._id === friend._id);
    })
   return (

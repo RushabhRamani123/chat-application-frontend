@@ -29,23 +29,21 @@ const Group_Chat = () => {
   const group = useSelector((state) => state.app.user.group);
   const groups = useSelector((state) => state.app.group);
   useEffect(() => {
-  // replace with the actual user id
-  socket.emit("get_group", (data) => {
-  console.log(data);
-  // this data is the list of conversations
-  // dispatch action
-    dispatch(FetchDirectGroupData({ conversations: data }));
-  });
+    // replace with the actual user id
+    socket.emit("get_group", (data) => {
+      // console.log(data);
+      // this data is the list of conversations
+      // dispatch action
+      dispatch(FetchDirectGroupData({ conversations: data }));
+    });
     // dispatch(FetchGroupData(group));
-  },[group])
-  console.log(JSON.stringify(groups));
+  }, [group]);
   const handleCloseDialog = () => {
     setOpenDialog(false);
   };
   const handleOpenDialog = () => {
     setOpenDialog(true);
-  };
-  
+  }; 
   const theme = useTheme();
   return (
     <>

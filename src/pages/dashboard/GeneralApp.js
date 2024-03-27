@@ -16,7 +16,7 @@ const GeneralApp = () => {
   const theme = useTheme();
   const { Tab } = useSelector((state) => state.app);
   useEffect(() => {
-   console.log(Tab) 
+  //  console.log(Tab) 
   })
   const { sideBar, room_id, chat_type } = useSelector((state) => state.app);
   const windowWidth = window.innerWidth;
@@ -67,7 +67,10 @@ const GeneralApp = () => {
               </>: null : <>
               {chat_type === "individual" &&
               room_id !== null ?(
-                <ChatComponent />
+                  <>
+                                    <ChatComponent />
+                  
+                  </>
               ) : (
                 <Stack
                   spacing={2}

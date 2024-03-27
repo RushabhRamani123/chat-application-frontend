@@ -67,7 +67,7 @@ const CreateGroupForm = ({ handleClose }) => {
   const onSubmit = async (data) => {
     try {
       //  API Call
-      console.log("DATA", data);
+      // console.log("DATA", data);
     } catch (error) {
       console.error(error);
     }
@@ -76,7 +76,7 @@ const CreateGroupForm = ({ handleClose }) => {
   const handleMemberChange = (event, newValue) => {
     setValue("members", newValue.map((member) => member.id));
   };
-  console.log(title, members);
+  // console.log(title, members);
   return (
 <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>

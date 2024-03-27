@@ -40,7 +40,7 @@ export default function AuthLoginForm() {
   } = methods;
   const onSubmit = async (data) => {
     try {
-      console.log(data);
+      // console.log(data);
       dispatch(LoginUser(data));
     } catch (error) {
       console.error(error);

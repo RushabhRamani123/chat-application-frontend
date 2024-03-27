@@ -73,8 +73,8 @@ const Media = () => {
               case 0:
                 return (
                   <Grid container spacing={2}>
-                    {[0, 1, 2, 3, 4, 5, 6].map((el) => (
-                      <Grid item xs={4}>
+                    {[0, 1, 2, 3, 4, 5, 6].map((el,index) => (
+                      <Grid item xs={4} key={index}>
                         <img
                           src={faker.image.city()}
                           alt={faker.internet.userName()}
@@ -84,10 +84,10 @@ const Media = () => {
                   </Grid>
                 );
               case 1:
-                return Shared_links.map((el) => <LinkMsg el={el} />);
+                return Shared_links?.map((el,index) => <LinkMsg key={index} el={el} />);
 
               case 2:
-                return Shared_docs.map((el) => <DocMsg el={el} />);
+                return Shared_docs?.map((el,index) => <DocMsg   key={index} el={el} />);
 
               default:
                 break;
